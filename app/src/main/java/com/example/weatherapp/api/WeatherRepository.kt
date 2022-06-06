@@ -16,6 +16,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
     //retrofit part
     suspend fun getWeather(latitude : String, longitude : String) =
         inter.getWeather(latitude, longitude)
+    suspend fun getDailyForecast(latitude : String, longitude : String) =
+        inter.getDailyForecast(latitude, longitude)
+    suspend fun getHourlyForecast(latitude : String, longitude : String) =
+        inter.getHourlyForecast(latitude, longitude)
 
     //database part
     suspend fun insertCurrentWeather(currentWeather: CurrentWeather){

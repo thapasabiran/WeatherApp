@@ -12,13 +12,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
-        val api = RetroApiInterface.create()
-        val repo = WeatherRepository(api, this)
-        vm = WeatherViewModel(repo)
-        vm.weather.observe(this) {
-            println(it)
-        }
-        vm.getWeather("35","139")
+//
+//        val api = RetroApiInterface.create()
+//        val repo = WeatherRepository(api, this)
+//        vm = WeatherViewModel(repo)
+//        vm.getWeather("35","139")
+//        vm.getHourlyForecast("35","139")
     }
 }
