@@ -7,9 +7,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 
 class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
-    var weather = MutableLiveData<Weather>()
+    var weather = MutableLiveData<JSONObject>()
     var job : Job? = null
 
     //takes latitude and longitude of the location you want the weather
@@ -18,7 +19,7 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         job = CoroutineScope(Dispatchers.IO).launch {
             var res = repo.getWeather(latitude, longitude)
             if (res.isSuccessful) {
-                weather.postValue(res.body())
+                println(res.body())
             }
         }
     }

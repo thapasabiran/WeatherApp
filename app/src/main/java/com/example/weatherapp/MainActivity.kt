@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val api = RetroApiInterface.create()
-        val repo = WeatherRepository(api)
+        val repo = WeatherRepository(api, this)
         vm = WeatherViewModel(repo)
         vm.weather.observe(this) {
             println(it)
