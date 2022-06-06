@@ -2,6 +2,9 @@ package com.example.weatherapp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.weatherapp.api.RetroApiInterface
+import com.example.weatherapp.api.WeatherRepository
+import com.example.weatherapp.api.WeatherViewModel
 
 class MainActivity : AppCompatActivity() {
     lateinit var vm : WeatherViewModel
