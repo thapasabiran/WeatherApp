@@ -11,6 +11,9 @@ interface RetroApiInterface {
     @GET("/data/2.5/weather?")
     suspend fun getWeather(@Query("lat") latitude : String, @Query("lon") longitude : String,
                            @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<Weather>
+    @GET("data/2.5/forecast/daily?")
+    suspend fun getForecast(@Query("lat") latitude : String, @Query("lon") longitude : String,
+                           @Query("cnt") count : String = "7", @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<Forecast>
 
 
     companion object {

@@ -17,10 +17,9 @@ data class Weather(
     var name : String,
     var cod : Int
 )
-
 data class Coord(
-    var lon : Int,
-    var lat : Int
+    var lon : Float,
+    var lat : Float
 )
 data class Weath(
     var id : Int,
