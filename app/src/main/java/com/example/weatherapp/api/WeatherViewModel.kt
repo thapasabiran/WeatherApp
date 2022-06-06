@@ -14,12 +14,14 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
 
     //takes latitude and longitude of the location you want the weather data
     fun getWeather(latitude : String, longitude : String) {
-        job = CoroutineScope(Dispatchers.IO).launch {
+        /*job = CoroutineScope(Dispatchers.IO).launch {
             var res = repo.getWeather(latitude, longitude)
             if (res.isSuccessful) {
                 println(res.body())
             }
-        }
+        }*/
+
+        repo.updateWeather(latitude, longitude)
     }
 
     fun getHourlyForecast(latitude : String, longitude : String) {
