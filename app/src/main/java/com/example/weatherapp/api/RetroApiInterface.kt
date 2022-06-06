@@ -1,6 +1,6 @@
 package com.example.weatherapp.api
 
-import com.example.weatherapp.Weather
+
 import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.Retrofit
@@ -13,10 +13,12 @@ interface RetroApiInterface {
     @GET("/data/2.5/onecall?")
     suspend fun getWeather(@Query("lat") latitude : String, @Query("lon") longitude : String,
                            @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<String>
-
     @GET("data/2.5/forecast/daily?")
-    suspend fun getForecast(@Query("lat") latitude : String, @Query("lon") longitude : String,
-                           @Query("cnt") count : String = "7", @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<Forecast>
+    suspend fun getHourlyForecast(@Query("lat") latitude : String, @Query("lon") longitude : String,
+                           @Query("cnt") count : String = "7", @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<String>
+    @GET("data/2.5/forecast/hourly?")
+    suspend fun getDailyForecast(@Query("lat") latitude : String, @Query("lon") longitude : String,
+                            @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<String>
 
 
 

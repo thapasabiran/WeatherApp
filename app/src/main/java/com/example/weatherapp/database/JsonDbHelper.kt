@@ -15,7 +15,6 @@ class JsonDbHelper {
         val jsonObj = JsonParser.parseString(json)
         val current = jsonObj.asJsonObject.getAsJsonObject("current")
 
-        println("sdfhjklsdfjlfjslfsdjkl")
 
 
         return CurrentWeather(
