@@ -18,7 +18,7 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         weather = repo.getDailyWeather()
     }
 
-    //takes latitude and longitude of the location you want the weather data
+    //Update the weather from API and put it into the database
     fun updateWeather(latitude : String, longitude : String) {
         /*job = CoroutineScope(Dispatchers.IO).launch {
             var res = repo.getWeather(latitude, longitude)
@@ -38,6 +38,7 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         return repo.getDailyWeatherObservable()
     }
 
+    //retrofit
     fun getHourlyForecast(latitude : String, longitude : String) {
         job = CoroutineScope(Dispatchers.IO).launch {
             var res = repo.getHourlyForecast(latitude, longitude)

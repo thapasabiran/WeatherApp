@@ -21,6 +21,12 @@ interface WeatherDao {
     @Query("SELECT * FROM DailyWeather")
     fun getDailyWeatherObservable() : Observable<List<DailyWeather>>?
 
+    @Query("SELECT * FROM CurrentWeather")
+    fun getCurrentWeatherObservable() : Observable<List<CurrentWeather>>?
+
+    @Query("SELECT * FROM HourlyWeather")
+    fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>?
+
     @Insert
     fun insertCurrentWeather(currentWeather: CurrentWeather)
 
