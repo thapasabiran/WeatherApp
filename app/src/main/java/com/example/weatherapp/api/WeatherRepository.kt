@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.weatherapp.api.RetroApiInterface
 import com.example.weatherapp.database.*
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -13,7 +14,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     val db : WeatherDao? = AppDatabase.getInstance(context)?.weatherDao()
 
-    //retrofit part
+    //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
         inter.getWeather(latitude, longitude)
     suspend fun getDailyForecast(latitude : String, longitude : String) =
@@ -21,7 +22,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
     suspend fun getHourlyForecast(latitude : String, longitude : String) =
         inter.getHourlyForecast(latitude, longitude)
 
-    //database part
+    //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
     suspend fun insertCurrentWeather(currentWeather: CurrentWeather){
         db?.insertCurrentWeather(currentWeather)
     }
@@ -34,7 +35,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         db?.insertDailyWeather(dailyWeather)
     }
 
-    fun getCurrentWeather() : LiveData<CurrentWeather>? {
+    fun getCurrentWeather() : LiveData<List<CurrentWeather>>? {
         return db?.getCurrentWeather()
     }
 
@@ -46,17 +47,44 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getDailyWeather()
     }
 
+    //TEST observable pattern
+    fun getDailyWeatherObservable() : Observable<List<DailyWeather>>? {
+        return db?.getDailyWeatherObservable()
+    }
+
+    fun getCurrentWeatherObservable() : Observable<List<CurrentWeather>>? {
+        return db?.getCurrentWeatherObservable()
+    }
+
+    fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>? {
+        return db?.getHourlyWeatherObservable()
+    }
+
     fun updateWeather(latitude : String, longitude : String) {
         CoroutineScope(Dispatchers.IO).launch {
             var res = getWeather(latitude, longitude)
             if (res.isSuccessful) {
 
-                println("sdjkfhsdjkfghsdjkfhsdjkfhsdfjkhsj")
                 var json = res.body()
                 val dbHelper = JsonDbHelper()
 
                 val currentWeather = dbHelper.toCurrentWeather(json!!)
-                println(res.body())
+                val dailyWeatherList = dbHelper.toListDailyWeather(json)
+                val hourlyWeather = dbHelper.toListHourlyWeather(json)
+
+                //clear the DB, clearing/inserting is faster than updating
+                db?.clearDailyWeather()
+                db?.clearHourlyWeather()
+                db?.clearDailyWeather()
+
+                //insert items into database
+                insertCurrentWeather(currentWeather)
+                for(item in dailyWeatherList){
+                    insertDailyWeather(item)
+                }
+                for(item in hourlyWeather){
+                    insertHourlyWeather(item)
+                }
 
             }
         }
