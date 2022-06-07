@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.weatherapp.api.RetroApiInterface
@@ -12,6 +13,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val intentNext = Intent(this, Map::class.java)
+        startActivity(intentNext)
+        this.finish()
 //
 //        val api = RetroApiInterface.create()
 //        val repo = WeatherRepository(api, this)

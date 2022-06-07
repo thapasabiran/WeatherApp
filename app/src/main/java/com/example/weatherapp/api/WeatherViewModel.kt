@@ -22,23 +22,6 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         }
     }
 
-    fun getHourlyForecast(latitude : String, longitude : String) {
-        job = CoroutineScope(Dispatchers.IO).launch {
-            var res = repo.getHourlyForecast(latitude, longitude)
-            if (res.isSuccessful) {
-                println(res.body())
-            }
-        }
-    }
-
-    fun getDailyForecast(latitude : String, longitude : String) {
-        job = CoroutineScope(Dispatchers.IO).launch {
-            var res = repo.getDailyForecast(latitude, longitude)
-            if (res.isSuccessful) {
-                println(res.body())
-            }
-        }
-    }
 
 
 }
