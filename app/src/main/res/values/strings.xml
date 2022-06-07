@@ -5,4 +5,7 @@
         <item>C</item>
         <item>F</item>
     </string-array>
+    <string name="location_zi">Location (ZIP or city)</string>
+
+    <string name="use_metric_">Use metric units</string>
 </resources>
