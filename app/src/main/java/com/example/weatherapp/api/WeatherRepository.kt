@@ -52,6 +52,14 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getDailyWeatherObservable()
     }
 
+    fun getCurrentWeatherObservable() : Observable<List<CurrentWeather>>? {
+        return db?.getCurrentWeatherObservable()
+    }
+
+    fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>? {
+        return db?.getHourlyWeatherObservable()
+    }
+
     fun updateWeather(latitude : String, longitude : String) {
         CoroutineScope(Dispatchers.IO).launch {
             var res = getWeather(latitude, longitude)
