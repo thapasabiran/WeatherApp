@@ -72,25 +72,41 @@
         app:layout_constraintTop_toBottomOf="@+id/welcomeLocationTextView">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/welcomeLocationTextEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/welcomeUnitsTextLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="268dp"
-        android:layout_height="51dp"
-        app:boxStrokeColor="@color/teal_700"
-        app:boxStrokeErrorColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeUnitTextView">
+<!--    <com.google.android.material.textfield.TextInputLayout-->
+<!--        android:id="@+id/welcomeUnitsTextLayout"-->
+<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"-->
+<!--        android:layout_width="268dp"-->
+<!--        android:layout_height="51dp"-->
+<!--        app:boxStrokeColor="@color/teal_700"-->
+<!--        app:boxStrokeErrorColor="@color/black"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/welcomeUnitTextView">-->
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.textfield.TextInputLayout>
+
+        <Spinner
+            android:id="@+id/spinner"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="268dp"
+            android:layout_height="51dp"
+            app:boxStrokeColor="@color/teal_700"
+            app:boxStrokeErrorColor="@color/black"
+            android:layout_alignParentTop="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/welcomeUnitTextView"
+            android:layout_margin="10dp" />
+<!--        <com.google.android.material.textfield.TextInputEditText-->
+<!--            android:id="@+id/welcomeUnitsTextEdit"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content" />-->
+
+<!--    </com.google.android.material.textfield.TextInputLayout>-->
 
     <Button
         android:id="@+id/welcomeContinueButton"
@@ -102,6 +118,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcomeUnitsTextLayout" />
+        app:layout_constraintTop_toBottomOf="@id/spinner" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

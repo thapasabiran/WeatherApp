@@ -14,6 +14,7 @@ import org.json.JSONObject
 class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
     var weather : LiveData<List<DailyWeather>>?
     var job : Job? = null
+    var username = ""
     init {
         weather = repo.getDailyWeather()
     }
