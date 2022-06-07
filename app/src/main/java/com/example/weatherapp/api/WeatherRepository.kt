@@ -13,7 +13,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     val db : WeatherDao? = AppDatabase.getInstance(context)?.weatherDao()
 
-    //retrofit part
+    //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
         inter.getWeather(latitude, longitude)
     suspend fun getDailyForecast(latitude : String, longitude : String) =
@@ -21,7 +21,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
     suspend fun getHourlyForecast(latitude : String, longitude : String) =
         inter.getHourlyForecast(latitude, longitude)
 
-    //database part
+    //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
     suspend fun insertCurrentWeather(currentWeather: CurrentWeather){
         db?.insertCurrentWeather(currentWeather)
     }
@@ -34,7 +34,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         db?.insertDailyWeather(dailyWeather)
     }
 
-    fun getCurrentWeather() : LiveData<CurrentWeather>? {
+    fun getCurrentWeather() : LiveData<List<CurrentWeather>>? {
         return db?.getCurrentWeather()
     }
 
@@ -56,9 +56,21 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
                 val currentWeather = dbHelper.toCurrentWeather(json!!)
                 val dailyWeatherList = dbHelper.toListDailyWeather(json)
+                val hourlyWeather = dbHelper.toListHourlyWeather(json)
 
-                println(currentWeather.long_description)
-                println(dailyWeatherList)
+                //clear the DB, clearing/inserting is faster than updating
+                db?.clearDailyWeather()
+                db?.clearHourlyWeather()
+                db?.clearDailyWeather()
+
+                //insert items into database
+                insertCurrentWeather(currentWeather)
+                for(item in dailyWeatherList){
+                    insertDailyWeather(item)
+                }
+                for(item in hourlyWeather){
+                    insertHourlyWeather(item)
+                }
 
             }
         }
