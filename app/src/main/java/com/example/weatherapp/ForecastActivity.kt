@@ -6,11 +6,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weatherapp.adapters.DailyWeatherAdapter
 import com.example.weatherapp.adapters.HourlyWeatherAdapter
 import com.example.weatherapp.database.DailyWeather
+import com.example.weatherapp.database.HourlyWeather
 import com.example.weatherapp.databinding.ActivityForecastBinding
 
 class ForecastActivity : AppCompatActivity() {
     lateinit var binding: ActivityForecastBinding
-    lateinit var dailyWeatherList: ArrayList<Main>
+    lateinit var dailyWeatherList: ArrayList<DailyWeather>
+    lateinit var hourlyWeatherList: ArrayList<HourlyWeather>
     lateinit var dailyWeatherAdapter: DailyWeatherAdapter
     lateinit var hourlyWeatherAdapter: HourlyWeatherAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,10 +20,16 @@ class ForecastActivity : AppCompatActivity() {
         binding = ActivityForecastBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dailyWeatherList = ArrayList<Main>()
+        dailyWeatherList = ArrayList<DailyWeather>()
         for (i in 1 .. 8) {
-            var dailyWeather = Main(0.0f,0.0f,1.5f * i,1.9f * i,0.0f,0.0f)
+            var dailyWeather = DailyWeather(null,0, 0, 0, 0, 0, 0.0, 1.5 * i ,2.5 * i, 0.0, 0.0, 0.0, 0.0, 0, 0,0.0,0.0,0,0.0,0,"","","",0,0.0,0.0,0.0,0.0)
             dailyWeatherList.add(dailyWeather)
+        }
+
+        hourlyWeatherList = ArrayList<HourlyWeather>()
+        for (i in 1 .. 8) {
+            var hourlyWeather = HourlyWeather(null,1654186183, 2.5 * i, 0.0, 0, 0, 0.0, 0.0 ,0, 0, 0.0, 0, 0.0, 0, "","","",0.0)
+            hourlyWeatherList.add(hourlyWeather)
         }
 
         var dailyRecyclerView = binding.dailyRecyclerView
@@ -31,7 +39,7 @@ class ForecastActivity : AppCompatActivity() {
 
 
         var hourlyRecyclerView = binding.hourlyRecyclerView
-        hourlyWeatherAdapter = HourlyWeatherAdapter(dailyWeatherList)
+        hourlyWeatherAdapter = HourlyWeatherAdapter(hourlyWeatherList)
         hourlyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true)
         hourlyRecyclerView.adapter = hourlyWeatherAdapter
     }
