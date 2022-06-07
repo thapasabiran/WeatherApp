@@ -5,6 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import io.reactivex.rxjava3.core.Observable
 
 @Dao
 interface WeatherDao {
@@ -16,6 +17,9 @@ interface WeatherDao {
 
     @Query("SELECT * FROM DailyWeather")
     fun getDailyWeather() : LiveData<List<DailyWeather>>?
+
+    @Query("SELECT * FROM DailyWeather")
+    fun getDailyWeatherObservable() : Observable<List<DailyWeather>>?
 
     @Insert
     fun insertCurrentWeather(currentWeather: CurrentWeather)

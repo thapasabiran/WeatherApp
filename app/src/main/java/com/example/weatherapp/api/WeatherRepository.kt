@@ -5,6 +5,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import com.example.weatherapp.api.RetroApiInterface
 import com.example.weatherapp.database.*
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,6 +45,11 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     fun getDailyWeather() : LiveData<List<DailyWeather>>? {
         return db?.getDailyWeather()
+    }
+
+    //TEST observable pattern
+    fun getDailyWeatherObservable() : Observable<List<DailyWeather>>? {
+        return db?.getDailyWeatherObservable()
     }
 
     fun updateWeather(latitude : String, longitude : String) {

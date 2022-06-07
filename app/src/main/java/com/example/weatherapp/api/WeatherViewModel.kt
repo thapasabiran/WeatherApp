@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.database.DailyWeather
+import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,8 +30,12 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         repo.updateWeather(latitude, longitude)
     }
 
-    fun getWeather(){
+    fun getDailyWeather(){
         weather = repo.getDailyWeather()
+    }
+
+    fun getDailyWeatherObservable() : Observable<List<DailyWeather>>? {
+        return repo.getDailyWeatherObservable()
     }
 
     fun getHourlyForecast(latitude : String, longitude : String) {
