@@ -5,6 +5,10 @@
       <map>
         <entry key="..\:/Users/sabir/Desktop/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.264" />
         <entry key="..\:/Users/sabir/Desktop/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.11018518518518519" />
+        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/activity_forcast.xml" value="0.264" />
+        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/activity_forecast.xml" value="0.21510416666666668" />
+        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/daily_weather_layout.xml" value="0.264" />
+        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/hourly_weather_layout.xml" value="0.209375" />
       </map>
     </option>
   </component>
