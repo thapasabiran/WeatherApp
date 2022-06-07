@@ -28,7 +28,6 @@ class FrontPageActivity : AppCompatActivity() {
 ////            binding.LocationText.text = it.sys.country
 ////        }
 //        vm.getWeather("35","139")
-
         binding.forcastButton.setOnClickListener {
             var forecastIntent = Intent(this, ForecastActivity::class.java)
             startActivity(forecastIntent)
