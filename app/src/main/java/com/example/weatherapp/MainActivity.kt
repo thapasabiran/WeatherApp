@@ -16,7 +16,13 @@ class MainActivity : AppCompatActivity() {
         val api = RetroApiInterface.create()
         val repo = WeatherRepository(api, this)
         vm = WeatherViewModel(repo)
-        vm.getWeather("35","139")
+        vm.updateWeather("35","139")
+
+        vm.weather?.observe(this, {
+            item -> println("daily weather: length: ${item.size} $item")
+        })
+
+        vm.getWeather()
 //        vm.getHourlyForecast("35","139")
     }
 }

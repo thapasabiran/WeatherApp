@@ -9,13 +9,13 @@ import androidx.room.Update
 @Dao
 interface WeatherDao {
     @Query("SELECT * FROM CurrentWeather")
-    fun getCurrentWeather() : LiveData<CurrentWeather>
+    fun getCurrentWeather() : LiveData<List<CurrentWeather>>?
 
     @Query("SELECT * FROM HourlyWeather")
-    fun getHourlyWeather() : LiveData<List<HourlyWeather>>
+    fun getHourlyWeather() : LiveData<List<HourlyWeather>>?
 
     @Query("SELECT * FROM DailyWeather")
-    fun getDailyWeather() : LiveData<List<DailyWeather>>
+    fun getDailyWeather() : LiveData<List<DailyWeather>>?
 
     @Insert
     fun insertCurrentWeather(currentWeather: CurrentWeather)
