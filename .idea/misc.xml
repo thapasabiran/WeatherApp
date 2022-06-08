@@ -3,13 +3,22 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/sabir/Desktop/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.264" />
-        <entry key="..\:/Users/sabir/Desktop/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.11018518518518519" />
-        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/activity_forcast.xml" value="0.264" />
-        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/activity_forecast.xml" value="0.21510416666666668" />
-        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.3625" />
-        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/daily_weather_layout.xml" value="0.264" />
-        <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/hourly_weather_layout.xml" value="0.209375" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/drawable/rectangle_3.xml" value="0.2685" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/drawable/rectangle_5.xml" value="0.2685" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/drawable/rectangle_6.xml" value="0.2685" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/activity_forecast.xml" value="0.3569230769230769" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.3625" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.3625" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/activity_model_test.xml" value="0.3625" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/activity_search.xml" value="0.3625" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/activity_settings.xml" value="0.3614583333333333" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/activity_warning.xml" value="0.3625" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/daily_weather_layout.xml" value="0.3625" />
+        <entry key="..\:/Users/Sandeep/Documents/WeatherApp/app/src/main/res/layout/hourly_weather_layout.xml" value="0.3625" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.25025641025641027" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_model_test.xml" value="0.11302083333333333" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_model_test.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
