@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
         val pref = getPreferences(Context.MODE_PRIVATE)
 
-
         val adapter = ArrayAdapter.createFromResource(this,
             R.array.temperature_units, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -41,16 +40,10 @@ class MainActivity : AppCompatActivity() {
                 println(pref.getString("location", "default"))
                 println(pref.getString("units", "default"))
             }
+
            // val frontPageIntent = Intent(this, FrontPageActivity::class.java)
           //  startActivity(frontPageIntent)
         }
 
-//        val api = RetroApiInterface.create()
-//        val repo = WeatherRepository(api)
-//        vm = WeatherViewModel(repo)
-//        vm.weather.observe(this) {
-//            println(it)
-//        }
-//        vm.getWeather("35","139")
     }
 }

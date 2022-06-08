@@ -1,9 +1,11 @@
 package com.example.weatherapp.api
 
 
+import com.example.weatherapp.database.CurrentWeather
 import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
@@ -26,7 +28,8 @@ interface RetroApiInterface {
         val BASE_URL = "https://api.openweathermap.org"
         fun create() : RetroApiInterface {
             val retrofit = Retrofit.Builder()
-                .addConverterFactory(ScalarsConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                 .baseUrl(BASE_URL)
                 .build()
             return retrofit.create(RetroApiInterface::class.java)
