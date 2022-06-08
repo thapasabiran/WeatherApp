@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.database.DailyWeather
+import com.example.weatherapp.database.HourlyWeather
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,9 +14,11 @@ import org.json.JSONObject
 
 class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
     var weather : LiveData<List<DailyWeather>>?
+    var weatherHourly : LiveData<List<HourlyWeather>>?
     var job : Job? = null
     init {
         weather = repo.getDailyWeather()
+        weatherHourly = repo.getHourlyWeather()
     }
 
     //Update the weather from API and put it into the database
@@ -34,6 +37,13 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         weather = repo.getDailyWeather()
     }
 
+//    fun getHourlyWeather() {
+//        viewModelScope.launch {
+//            searchList = repo.searchBook(searchQry)
+//        }
+//        repo.getHourlyWeather()
+//    }
+
     fun getDailyWeatherObservable() : Observable<List<DailyWeather>>? {
         return repo.getDailyWeatherObservable()
     }
@@ -44,6 +54,8 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
             var res = repo.getHourlyForecast(latitude, longitude)
             if (res.isSuccessful) {
                 println(res.body())
+            } else {
+                println("Something went wrong!")
             }
         }
     }
@@ -57,5 +69,8 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         }
     }
 
+    fun resetAdapter() {
+
+    }
 
 }
