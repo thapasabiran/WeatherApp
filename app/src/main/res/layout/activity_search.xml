@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    >
-
+    tools:context=".SearchActivity"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/card_view"
@@ -31,17 +30,17 @@
     </androidx.appcompat.widget.Toolbar>
 
 
-        <TextView
-            android:id="@+id/location_zi"
-            android:layout_width="150dp"
-            android:layout_height="22dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp"
-            android:text="@string/location_zi"
-            android:textSize="15dp"
-            android:textAppearance="@style/location_zi"
-            android:gravity="top"
-            />
+    <TextView
+        android:id="@+id/location_zi"
+        android:layout_width="150dp"
+        android:layout_height="22dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="20dp"
+        android:text="@string/location_zi"
+        android:textSize="15dp"
+        android:textAppearance="@style/location_zi"
+        android:gravity="top"
+        />
 
     <SearchView
         android:id="@+id/idSV"
@@ -92,6 +91,5 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:backgroundTint="@color/blue"/>
-
 
 </LinearLayout>
