@@ -35,6 +35,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         db?.insertDailyWeather(dailyWeather)
     }
 
+    suspend fun insertAlert(alert: Alert){
+        db?.insertAlert(alert)
+    }
+
     fun getCurrentWeather() : LiveData<List<CurrentWeather>>? {
         return db?.getCurrentWeather()
     }
@@ -45,6 +49,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     fun getDailyWeather() : LiveData<List<DailyWeather>>? {
         return db?.getDailyWeather()
+    }
+
+    fun getAlerts() : LiveData<List<Alert>>? {
+        return db?.getAlerts()
     }
 
     //TEST observable pattern
@@ -60,6 +68,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getHourlyWeatherObservable()
     }
 
+    fun getAlertsObservable() : Observable<List<Alert>>?{
+        return db?.getAlertsObservable()
+    }
+
     fun updateWeather(latitude : String, longitude : String) {
         CoroutineScope(Dispatchers.IO).launch {
             var res = getWeather(latitude, longitude)
@@ -73,9 +85,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
                 val hourlyWeather = dbHelper.toListHourlyWeather(json)
 
                 //clear the DB, clearing/inserting is faster than updating
-                db?.clearDailyWeather()
+                db?.clearCurrentWeather()
                 db?.clearHourlyWeather()
                 db?.clearDailyWeather()
+                db?.clearAlerts()
 
                 //insert items into database
                 insertCurrentWeather(currentWeather)
@@ -84,6 +97,13 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
                 }
                 for(item in hourlyWeather){
                     insertHourlyWeather(item)
+                }
+
+                if(json.contains("alerts")){
+                    val alerts = dbHelper.toAlerts(json)
+                    for(item in alerts){
+                        insertAlert(item)
+                    }
                 }
 
             }
