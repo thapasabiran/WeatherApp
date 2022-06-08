@@ -23,7 +23,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val pref = getPreferences(Context.MODE_PRIVATE)
+        //Shared preferences are application-wide, getPreferences only applies to a single activity
+        val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
 
         val adapter = ArrayAdapter.createFromResource(this,
@@ -41,8 +42,8 @@ class MainActivity : AppCompatActivity() {
                 println(pref.getString("location", "default"))
                 println(pref.getString("units", "default"))
             }
-           // val frontPageIntent = Intent(this, FrontPageActivity::class.java)
-          //  startActivity(frontPageIntent)
+            //val frontPageIntent = Intent(this, FrontPageActivity::class.java)
+            //startActivity(frontPageIntent)
         }
 
 //        val api = RetroApiInterface.create()

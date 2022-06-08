@@ -112,6 +112,23 @@ class JsonDbHelper {
         return list
     }
 
+    fun toAlerts(json: String) : List<Alert>{
+        var jObject = JSONObject(json)
+        var alerts = jObject.getJSONArray("alerts")
+        val list = ArrayList<Alert>()
+        (0 until alerts.length()).mapTo(list){
+            Alert(
+                null,
+                alerts.getJSONObject(it).getString("sender_name"),
+                alerts.getJSONObject(it).getString("event"),
+                alerts.getJSONObject(it).getString("description"),
+                alerts.getJSONObject(it).getLong("start"),
+                alerts.getJSONObject(it).getLong("end")
+            )
+        }
+        return list
+    }
+
     fun getJsonFromAssets(fileName: String, context: Context): String? {
         /*
         open file - stream of bytes
