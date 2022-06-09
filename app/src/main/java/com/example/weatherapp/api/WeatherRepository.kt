@@ -17,10 +17,6 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
     //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
         inter.getWeather(latitude, longitude)
-    suspend fun getDailyForecast(latitude : String, longitude : String) =
-        inter.getDailyForecast(latitude, longitude)
-    suspend fun getHourlyForecast(latitude : String, longitude : String) =
-        inter.getHourlyForecast(latitude, longitude)
 
     //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
     suspend fun insertCurrentWeather(currentWeather: CurrentWeather){
@@ -35,6 +31,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         db?.insertDailyWeather(dailyWeather)
     }
 
+    suspend fun insertAlert(alert: Alert){
+        db?.insertAlert(alert)
+    }
+
     fun getCurrentWeather() : LiveData<List<CurrentWeather>>? {
         return db?.getCurrentWeather()
     }
@@ -45,6 +45,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     fun getDailyWeather() : LiveData<List<DailyWeather>>? {
         return db?.getDailyWeather()
+    }
+
+    fun getAlerts() : LiveData<List<Alert>>? {
+        return db?.getAlerts()
     }
 
     //TEST observable pattern
@@ -60,22 +64,27 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getHourlyWeatherObservable()
     }
 
+    fun getAlertsObservable() : Observable<List<Alert>>?{
+        return db?.getAlertsObservable()
+    }
+
     fun updateWeather(latitude : String, longitude : String) {
         CoroutineScope(Dispatchers.IO).launch {
             var res = getWeather(latitude, longitude)
             if (res.isSuccessful) {
 
                 var json = res.body()
-                val dbHelper = JsonDbHelper()
+                //val dbHelper = JsonDbHelper()
 
-                val currentWeather = dbHelper.toCurrentWeather(json!!)
-                val dailyWeatherList = dbHelper.toListDailyWeather(json)
-                val hourlyWeather = dbHelper.toListHourlyWeather(json)
+                val currentWeather = JsonDbHelper.toCurrentWeather(json!!)
+                val dailyWeatherList = JsonDbHelper.toListDailyWeather(json)
+                val hourlyWeather = JsonDbHelper.toListHourlyWeather(json)
 
                 //clear the DB, clearing/inserting is faster than updating
-                db?.clearDailyWeather()
+                db?.clearCurrentWeather()
                 db?.clearHourlyWeather()
                 db?.clearDailyWeather()
+                db?.clearAlerts()
 
                 //insert items into database
                 insertCurrentWeather(currentWeather)
@@ -84,6 +93,13 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
                 }
                 for(item in hourlyWeather){
                     insertHourlyWeather(item)
+                }
+
+                if(json.contains("alerts")){
+                    val alerts = JsonDbHelper.toAlerts(json)
+                    for(item in alerts){
+                        insertAlert(item)
+                    }
                 }
 
             }

@@ -79,3 +79,13 @@ data class DailyWeather(
     val snow: Double?,
     val uvi: Double,
 ) : Serializable
+
+@Entity
+data class Alert(
+    @PrimaryKey(autoGenerate = true) val id: Int?,
+    val sender_name: String,
+    val short_description: String,
+    val long_description: String,
+    val start_time: Long,
+    val end_time: Long
+) : Serializable

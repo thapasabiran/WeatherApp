@@ -5,4 +5,11 @@
         <item>C</item>
         <item>F</item>
     </string-array>
+    <string name="location_zi">Location (ZIP or city)</string>
+
+    <string name="use_metric_">Use metric units</string>
+
+    <string name="areas_affec">Areas affected:\n"Coastal Charlotte; Coastal Lee; Coastal Sarasota;
+         DeSoto; Hardee; Highlands;
+        Inland Charlotte; Inland Lee; Inland Manatee; Inland Sarasota; Polk"</string>
 </resources>

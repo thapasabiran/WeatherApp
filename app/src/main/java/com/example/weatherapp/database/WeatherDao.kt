@@ -27,6 +27,12 @@ interface WeatherDao {
     @Query("SELECT * FROM HourlyWeather")
     fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>?
 
+    @Query("SELECT * FROM Alert")
+    fun getAlerts() : LiveData<List<Alert>>
+
+    @Query("SELECT * FROM Alert")
+    fun getAlertsObservable() : Observable<List<Alert>>
+
     @Insert
     fun insertCurrentWeather(currentWeather: CurrentWeather)
 
@@ -35,6 +41,9 @@ interface WeatherDao {
 
     @Insert
     fun insertDailyWeather(dailyWeather: DailyWeather)
+
+    @Insert
+    fun insertAlert(alert: Alert)
 
     @Update
     fun updateCurrentWeather(currentWeather: CurrentWeather)
@@ -45,6 +54,9 @@ interface WeatherDao {
     @Update
     fun updateDailyWeather(dailyWeather: DailyWeather)
 
+    @Update
+    fun updateAlert(alert: Alert)
+
     @Query("DELETE FROM CurrentWeather")
     fun clearCurrentWeather()
 
@@ -53,4 +65,7 @@ interface WeatherDao {
 
     @Query("DELETE FROM DailyWeather")
     fun clearDailyWeather()
+
+    @Query("DELETE FROM Alert")
+    fun clearAlerts()
 }
