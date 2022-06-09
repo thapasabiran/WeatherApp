@@ -40,8 +40,7 @@ class MainActivity : AppCompatActivity() {
                 putString("units", binding.spinner.selectedItem.toString())
                 apply()
             }
-
-            val frontPageIntent = Intent(this, SearchActivity::class.java)
+            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
         }
 
