@@ -17,12 +17,9 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
     //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
         inter.getWeather(latitude, longitude)
-    suspend fun getDailyForecast(latitude : String, longitude : String) =
-        inter.getDailyForecast(latitude, longitude)
-    suspend fun getHourlyForecast(latitude : String, longitude : String) =
-        inter.getHourlyForecast(latitude, longitude)
 
     //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
+
     suspend fun insertCurrentWeather(currentWeather: CurrentWeather){
         db?.insertCurrentWeather(currentWeather)
     }
@@ -41,6 +38,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     fun getCurrentWeather() : LiveData<List<CurrentWeather>>? {
         return db?.getCurrentWeather()
+    }
+
+    fun getCurrentWeatherSingle() : LiveData<CurrentWeather>? {
+        return db?.getCurrentWeatherSingle()
     }
 
     fun getHourlyWeather() : LiveData<List<HourlyWeather>>? {
@@ -62,6 +63,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     fun getCurrentWeatherObservable() : Observable<List<CurrentWeather>>? {
         return db?.getCurrentWeatherObservable()
+    }
+
+    fun getCurrentWeatherObservableSingle() : Observable<CurrentWeather>? {
+        return db?.getCurrentWeatherObservableSingle()
     }
 
     fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>? {

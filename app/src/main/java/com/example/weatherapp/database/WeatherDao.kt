@@ -12,6 +12,9 @@ interface WeatherDao {
     @Query("SELECT * FROM CurrentWeather")
     fun getCurrentWeather() : LiveData<List<CurrentWeather>>?
 
+    @Query("SELECT * FROM CurrentWeather LIMIT 1")
+    fun getCurrentWeatherSingle() : LiveData<CurrentWeather>?
+
     @Query("SELECT * FROM HourlyWeather")
     fun getHourlyWeather() : LiveData<List<HourlyWeather>>?
 
@@ -23,6 +26,9 @@ interface WeatherDao {
 
     @Query("SELECT * FROM CurrentWeather")
     fun getCurrentWeatherObservable() : Observable<List<CurrentWeather>>?
+
+    @Query("SELECT * FROM CurrentWeather LIMIT 1")
+    fun getCurrentWeatherObservableSingle() : Observable<CurrentWeather>?
 
     @Query("SELECT * FROM HourlyWeather")
     fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>?
