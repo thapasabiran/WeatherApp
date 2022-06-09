@@ -83,11 +83,11 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
             if (res.isSuccessful) {
 
                 var json = res.body()
-                val dbHelper = JsonDbHelper()
+                //val dbHelper = JsonDbHelper()
 
-                val currentWeather = dbHelper.toCurrentWeather(json!!)
-                val dailyWeatherList = dbHelper.toListDailyWeather(json)
-                val hourlyWeather = dbHelper.toListHourlyWeather(json)
+                val currentWeather = JsonDbHelper.toCurrentWeather(json!!)
+                val dailyWeatherList = JsonDbHelper.toListDailyWeather(json)
+                val hourlyWeather = JsonDbHelper.toListHourlyWeather(json)
 
                 //clear the DB, clearing/inserting is faster than updating
                 db?.clearCurrentWeather()
@@ -105,7 +105,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
                 }
 
                 if(json.contains("alerts")){
-                    val alerts = dbHelper.toAlerts(json)
+                    val alerts = JsonDbHelper.toAlerts(json)
                     for(item in alerts){
                         insertAlert(item)
                     }

@@ -1,10 +1,8 @@
 package com.example.weatherapp.database
 
-import android.content.Context
-import android.content.SharedPreferences
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.prefs.Preferences
+import kotlin.math.round
 
 class Util {
     companion object{
@@ -68,18 +66,12 @@ class Util {
             return s
         }
 
-        fun toUserSelectedUnit(pref: SharedPreferences, temp: Double): String {
-            var userPreferedTemp = ""
-            if (pref.getString("units", "K").equals("C")) {
-                var celcius = temp - 273.15
-                userPreferedTemp = celcius.toInt().toString() + " C"
-            } else if (pref.getString("units", "K").equals("F")) {
-                var fahrenheit = 1.8*(temp - 273.15) + 32
-                userPreferedTemp = fahrenheit.toInt().toString() + " F"
-            } else {
-                userPreferedTemp = temp.toInt().toString() + " K"
-            }
-            return userPreferedTemp
+        fun kelvinToCelsius(d : Double) : String {
+            return round(d-273.15).toString()
+        }
+
+        fun kelvinToFahrenheit(d : Double) : String {
+            return round((d-273)*(9/5)+32).toString()
         }
     }
 }

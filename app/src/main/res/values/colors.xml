@@ -10,4 +10,9 @@
     <color name="grey">#808080</color>
     <color name="blue">#338BF3</color>
     <color name="lightorange">#FDCC82</color>
+
+    <color name="main_blue">#338BF3</color>
+    <color name="variant_blue">#2463AE</color>
+    <color name="light_blue">#6FACF4</color>
+    <color name="dark_blue">#05172C</color>
 </resources>
