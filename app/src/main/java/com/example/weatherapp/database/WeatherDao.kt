@@ -5,17 +5,39 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import io.reactivex.rxjava3.core.Observable
 
 @Dao
 interface WeatherDao {
     @Query("SELECT * FROM CurrentWeather")
-    fun getCurrentWeather() : LiveData<CurrentWeather>
+    fun getCurrentWeather() : LiveData<List<CurrentWeather>>?
+
+    @Query("SELECT * FROM CurrentWeather LIMIT 1")
+    fun getCurrentWeatherSingle() : LiveData<CurrentWeather>?
 
     @Query("SELECT * FROM HourlyWeather")
-    fun getHourlyWeather() : LiveData<List<HourlyWeather>>
+    fun getHourlyWeather() : LiveData<List<HourlyWeather>>?
 
     @Query("SELECT * FROM DailyWeather")
-    fun getDailyWeather() : LiveData<List<DailyWeather>>
+    fun getDailyWeather() : LiveData<List<DailyWeather>>?
+
+    @Query("SELECT * FROM DailyWeather")
+    fun getDailyWeatherObservable() : Observable<List<DailyWeather>>?
+
+    @Query("SELECT * FROM CurrentWeather")
+    fun getCurrentWeatherObservable() : Observable<List<CurrentWeather>>?
+
+    @Query("SELECT * FROM CurrentWeather LIMIT 1")
+    fun getCurrentWeatherObservableSingle() : Observable<CurrentWeather>?
+
+    @Query("SELECT * FROM HourlyWeather")
+    fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>?
+
+    @Query("SELECT * FROM Alert")
+    fun getAlerts() : LiveData<List<Alert>>
+
+    @Query("SELECT * FROM Alert")
+    fun getAlertsObservable() : Observable<List<Alert>>
 
     @Insert
     fun insertCurrentWeather(currentWeather: CurrentWeather)
@@ -26,6 +48,9 @@ interface WeatherDao {
     @Insert
     fun insertDailyWeather(dailyWeather: DailyWeather)
 
+    @Insert
+    fun insertAlert(alert: Alert)
+
     @Update
     fun updateCurrentWeather(currentWeather: CurrentWeather)
 
@@ -35,6 +60,9 @@ interface WeatherDao {
     @Update
     fun updateDailyWeather(dailyWeather: DailyWeather)
 
+    @Update
+    fun updateAlert(alert: Alert)
+
     @Query("DELETE FROM CurrentWeather")
     fun clearCurrentWeather()
 
@@ -43,4 +71,7 @@ interface WeatherDao {
 
     @Query("DELETE FROM DailyWeather")
     fun clearDailyWeather()
+
+    @Query("DELETE FROM Alert")
+    fun clearAlerts()
 }
