@@ -11,7 +11,7 @@ import retrofit2.http.Query
 
 interface RetroApiInterface {
     @GET("/data/2.5/onecall?")
-    suspend fun getWeather(@Query("lat") latitude : String, @Query("lon") longitude : String,
+    suspend fun getWeather(@Query("lat") latitude : String, @Query("lon") longitude : String, @Query("units") units: String,
                            @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<String>
 
     companion object {

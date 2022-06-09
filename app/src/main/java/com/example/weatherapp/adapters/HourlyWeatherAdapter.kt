@@ -1,18 +1,21 @@
 package com.example.weatherapp.adapters
 
+import android.content.SharedPreferences
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.database.HourlyWeather
+import com.example.weatherapp.database.Util.Companion.timestampToTime24
 import com.example.weatherapp.databinding.HourlyWeatherLayoutBinding
 import com.squareup.picasso.Picasso
 import java.time.Instant
 import java.time.ZoneId
 import java.util.*
+import java.util.prefs.Preferences
 
-class HourlyWeatherAdapter(private var hourlyWeatherList: List<HourlyWeather>): RecyclerView.Adapter<HourlyWeatherViewHolder>() {
+class HourlyWeatherAdapter(private var hourlyWeatherList: List<HourlyWeather>, private var preferences: SharedPreferences): RecyclerView.Adapter<HourlyWeatherViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HourlyWeatherViewHolder {
         var binding: HourlyWeatherLayoutBinding = HourlyWeatherLayoutBinding.inflate(LayoutInflater.from(parent.context))
         return HourlyWeatherViewHolder(binding)
@@ -21,26 +24,17 @@ class HourlyWeatherAdapter(private var hourlyWeatherList: List<HourlyWeather>): 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: HourlyWeatherViewHolder, position: Int) {
         val hourlyWeatherItemVM = hourlyWeatherList[position]
-//        holder.day = dailyWeatherItemVM.
 
-
-        //ToDo: Need to confirm if it getting current hours
-//        val date = Date(hourlyWeatherItemVM.dt)
-        val date = Instant.ofEpochSecond(hourlyWeatherItemVM.dt)
-            .atZone(ZoneId.systemDefault())
-            .toLocalDateTime()
-
-//        val date = Date()
-//        val toLonDate: Long = date.time
-//        val cal = Calendar.getInstance()
-//        cal.time = date
-
-        holder.hour.text = date.hour.toString()//cal.get(Calendar.HOUR_OF_DAY).toString()//format.format(date).toString()
+        holder.hour.text = timestampToTime24(hourlyWeatherItemVM.dt)
         Picasso.get().load("https://openweathermap.org/img/wn/" + hourlyWeatherItemVM.icon + "@4x.png").into(holder.icon)
 
-        if (true) {
-            var C = (hourlyWeatherItemVM.temp - 32) / 1.8
-            holder.temp.text = String.format("%.2f", C).toDouble().toString()
+        //ToDo: Convert to user preferred unit
+        if (preferences.getString("units", "K").equals("C")) {
+            var celcius = hourlyWeatherItemVM.temp - 273.15
+            holder.temp.text = celcius.toInt().toString()
+        } else if (preferences.getString("units", "default").equals("F")) {
+            var fahrenheit = 1.8*(hourlyWeatherItemVM.temp-273.15) + 32
+            holder.temp.text = fahrenheit.toInt().toString()
         } else {
             holder.temp.text = hourlyWeatherItemVM.temp.toString()
         }

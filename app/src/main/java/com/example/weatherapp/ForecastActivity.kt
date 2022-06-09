@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,13 +27,13 @@ class ForecastActivity : AppCompatActivity() {
 
         binding.forecastWetConTextView.text = intent.getStringExtra("weatherCondition")
         binding.forecastTemTextView.text = intent.getStringExtra("temp")
+        binding.forecastLocTextView.text = intent.getStringExtra("location")
 
         val api = RetroApiInterface.create()
         val repo = WeatherRepository(api, this)
 
         vm = WeatherViewModel(repo)
         dailyWeatherList = ArrayList<DailyWeather>()
-//        vm.updateWeather("35","139")
         vm.weather?.observe(this) {
             dailyWeatherList = it as ArrayList<DailyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
             dailyWeatherAdapter.setDailyWeather(dailyWeatherList)
@@ -44,14 +45,15 @@ class ForecastActivity : AppCompatActivity() {
             hourlyWeatherAdapter.setHourlyWeather(hourlyWeatherList)
         }
 
+        val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
         var dailyRecyclerView = binding.dailyRecyclerView
-        dailyWeatherAdapter = DailyWeatherAdapter(dailyWeatherList)
+        dailyWeatherAdapter = DailyWeatherAdapter(dailyWeatherList, pref)
         dailyRecyclerView.layoutManager = LinearLayoutManager(this)
         dailyRecyclerView.adapter = dailyWeatherAdapter
 
 
         var hourlyRecyclerView = binding.hourlyRecyclerView
-        hourlyWeatherAdapter = HourlyWeatherAdapter(hourlyWeatherList)
+        hourlyWeatherAdapter = HourlyWeatherAdapter(hourlyWeatherList, pref)
         hourlyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true)
         hourlyRecyclerView.adapter = hourlyWeatherAdapter
     }

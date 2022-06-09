@@ -25,6 +25,13 @@ class MainActivity : AppCompatActivity() {
         //Shared preferences are application-wide, getPreferences only applies to a single activity
         val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
+        //ToDo: Maybe we can create MainApp and call it
+        //So whenever application start it will fetch fresh copy of data and update database
+        val api = RetroApiInterface.create()
+        val repo = WeatherRepository(api, this)
+        vm = WeatherViewModel(repo)
+        vm.updateWeather("43.651070","-79.347015", pref.getString("units", "standard")!!)
+
 
         val adapter = ArrayAdapter.createFromResource(this,
             R.array.temperature_units, android.R.layout.simple_spinner_item)

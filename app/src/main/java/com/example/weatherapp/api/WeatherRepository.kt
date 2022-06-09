@@ -15,8 +15,8 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
     val db : WeatherDao? = AppDatabase.getInstance(context)?.weatherDao()
 
     //retrofit part - used to update the database, don't use in viewmodel
-    suspend fun getWeather(latitude : String, longitude : String) =
-        inter.getWeather(latitude, longitude)
+    suspend fun getWeather(latitude : String, longitude : String, units: String) =
+        inter.getWeather(latitude, longitude, units)
 
     //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
 
@@ -77,9 +77,9 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getAlertsObservable()
     }
 
-    fun updateWeather(latitude : String, longitude : String) {
+    fun updateWeather(latitude : String, longitude : String, units: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            var res = getWeather(latitude, longitude)
+            var res = getWeather(latitude, longitude, units)
             if (res.isSuccessful) {
 
                 var json = res.body()

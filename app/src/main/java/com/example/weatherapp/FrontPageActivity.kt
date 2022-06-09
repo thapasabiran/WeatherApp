@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -26,6 +27,8 @@ class FrontPageActivity : AppCompatActivity() {
         val api = RetroApiInterface.create()
         val repo = WeatherRepository(api, this)
 
+        val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+
         vm = WeatherViewModel(repo)
         currentWeatherList = ArrayList<CurrentWeather>()
         vm.weatherCurrent?.observe(this) {
@@ -33,17 +36,28 @@ class FrontPageActivity : AppCompatActivity() {
             binding.humidityTextView.text = currentWeatherList[0].humidity.toString()
             binding.windyTextView.setText(currentWeatherList[0].wind_speed.toString() + " m/s")
             binding.cloudyTextView.text = currentWeatherList[0].clouds.toString() + " %"
-            binding.tempTextView.text = currentWeatherList[0].temp.toString() + " C"
+
+            if (pref.getString("units", "K").equals("C")) {
+                var celcius = currentWeatherList[0].temp - 273.15
+                binding.tempTextView.text = celcius.toInt().toString() + " C"
+            } else if (pref.getString("units", "K").equals("F")) {
+                var fahrenheit = 1.8*(currentWeatherList[0].temp - 273.15) + 32
+                binding.tempTextView.text = fahrenheit.toInt().toString() + " F"
+            } else {
+                binding.tempTextView.text = currentWeatherList[0].temp.toInt().toString()
+            }
+
+
             binding.weatherDescriptionTextView.text = currentWeatherList[0].long_description.toString()
-//            binding.locationTextView.text = currentWeatherList[0].long_description.toString()
+            binding.locationTextView.text = pref.getString("location", "Tokyo")
         }
 
 
 
         binding.forcastButton.setOnClickListener {
             var forecastIntent = Intent(this, ForecastActivity::class.java)
-//            forecastIntent.putExtra("location", currentWeatherList[0].long_description)
-            forecastIntent.putExtra("temp", currentWeatherList[0].temp)
+            forecastIntent.putExtra("location", pref.getString("location", "Tokyo"))
+            forecastIntent.putExtra("temp", currentWeatherList[0].temp.toString())
 //            forecastIntent.putExtra("lowTemp", currentWeatherList[0].temp)
 //            forecastIntent.putExtra("highTemp", currentWeatherList[0].temp)
             forecastIntent.putExtra("weatherCondition", currentWeatherList[0].long_description)
