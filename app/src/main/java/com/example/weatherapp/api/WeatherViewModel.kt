@@ -39,6 +39,7 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         return repo.getDailyWeatherObservable()
     }
 
+
     //retrofit
     fun getHourlyForecast(latitude : String, longitude : String) {
         job = CoroutineScope(Dispatchers.IO).launch {
