@@ -43,6 +43,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getCurrentWeather()
     }
 
+    fun getCurrentWeatherSingle() : LiveData<CurrentWeather>? {
+        return db?.getCurrentWeatherSingle()
+    }
+
     fun getHourlyWeather() : LiveData<List<HourlyWeather>>? {
         return db?.getHourlyWeather()
     }
@@ -62,6 +66,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     fun getCurrentWeatherObservable() : Observable<List<CurrentWeather>>? {
         return db?.getCurrentWeatherObservable()
+    }
+
+    fun getCurrentWeatherObservableSingle() : Observable<CurrentWeather>? {
+        return db?.getCurrentWeatherObservableSingle()
     }
 
     fun getHourlyWeatherObservable() : Observable<List<HourlyWeather>>? {
