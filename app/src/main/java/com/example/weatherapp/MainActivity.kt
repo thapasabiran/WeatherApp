@@ -41,8 +41,8 @@ class MainActivity : AppCompatActivity() {
                 apply()
             }
 
-           // val frontPageIntent = Intent(this, FrontPageActivity::class.java)
-          //  startActivity(frontPageIntent)
+            val frontPageIntent = Intent(this, SearchActivity::class.java)
+            startActivity(frontPageIntent)
         }
 
     }

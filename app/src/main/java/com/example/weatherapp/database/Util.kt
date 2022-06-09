@@ -2,6 +2,7 @@ package com.example.weatherapp.database
 
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.round
 
 class Util {
     companion object{
@@ -63,6 +64,14 @@ class Util {
             s = simpleDateFormat.format(l * 1000)
 
             return s
+        }
+
+        fun kelvinToCelsius(d : Double) : String {
+            return round(d-273.15).toString()
+        }
+
+        fun kelvinToFahrenheit(d : Double) : String {
+            return round((d-273)*(9/5)+32).toString()
         }
     }
 }

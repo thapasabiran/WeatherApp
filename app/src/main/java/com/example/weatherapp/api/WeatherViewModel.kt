@@ -3,6 +3,7 @@ package com.example.weatherapp.api
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherapp.database.CurrentWeather
 import com.example.weatherapp.database.DailyWeather
@@ -12,9 +13,18 @@ import kotlinx.coroutines.*
 import java.util.*
 
 class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
-    lateinit var currentWeather: CurrentWeather
+    var currentWeather = MutableLiveData<CurrentWeather>()
     var job : Job? = null
     init {
+    }
+    fun getWeather(latitude : String, longitude : String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            var res = repo.getWeather(latitude,longitude)
+            if(res.isSuccessful) {
+                currentWeather.postValue(JsonDbHelper.toCurrentWeather(res.body()!!))
+            }
+
+        }
     }
 
     //Update the weather from API and put it into the database
@@ -43,25 +53,6 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         var address = geocoder.getFromLocationName(location, 3)
         return if (!address.isEmpty()) address.get(0) else null
     }
-
-    //
-    fun saveLocation(context: Context, location: String) {
-        var address = searchLocation(context,location)
-        CoroutineScope(Dispatchers.IO).launch {
-            if (address != null) {
-                var jsonString = repo.getWeather(address.latitude.toString(), address.longitude.toString())
-                var saveCurrentWeather = JsonDbHelper.toCurrentWeather(jsonString.body()!!)
-                var saveHourlyWeatherList = JsonDbHelper.toListHourlyWeather(jsonString.body()!!)
-                var saveDailyWeatherList = JsonDbHelper.toListDailyWeather(jsonString.body()!!)
-                repo.insertCurrentWeather(saveCurrentWeather)
-                for (dailyWeather in saveDailyWeatherList)
-                    repo.insertDailyWeather(dailyWeather)
-                for (hourlyWeather in saveHourlyWeatherList)
-                    repo.insertHourlyWeather(hourlyWeather)
-            }
-        }
-    }
-
     fun setAsDefaultLocation(location: String) {
 
     }
