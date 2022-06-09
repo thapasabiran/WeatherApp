@@ -128,7 +128,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:layout_marginTop="10dp"
-                    android:text="7-Days forecast"
+                    android:text="8-Days forecast"
                     android:textColor="@color/white"
                     android:textSize="15sp"/>
 

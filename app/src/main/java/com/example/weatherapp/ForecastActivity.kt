@@ -24,27 +24,11 @@ class ForecastActivity : AppCompatActivity() {
         lateinit var vm : WeatherViewModel
         setContentView(binding.root)
 
+        binding.forecastWetConTextView.text = intent.getStringExtra("weatherCondition")
+        binding.forecastTemTextView.text = intent.getStringExtra("temp")
+
         val api = RetroApiInterface.create()
         val repo = WeatherRepository(api, this)
-//        vm = WeatherViewModel(repo)
-//        vm.updateWeather("35","139")
-//        vm.weather?.observe(this) {
-//            val a = it
-//        }
-
-//        dailyWeatherList = ArrayList<DailyWeather>()
-//        for (i in 1 .. 8) {
-//            var dailyWeather = DailyWeather(null,0, 0, 0, 0, 0, 0.0, 1.5 * i ,2.5 * i, 0.0, 0.0, 0.0, 0.0, 0, 0,0.0,0.0,0,0.0,0,"","","",0,0.0,0.0,0.0,0.0)
-//            dailyWeatherList.add(dailyWeather)
-//        }
-
-//        hourlyWeatherList = ArrayList<HourlyWeather>()
-//        for (i in 1 .. 8) {
-//            var hourlyWeather = HourlyWeather(null,1654186183, 2.5 * i, 0.0, 0, 0, 0.0, 0.0 ,0, 0, 0.0, 0, 0.0, 0, "","","",0.0)
-//            hourlyWeatherList.add(hourlyWeather)
-//        }
-
-
 
         vm = WeatherViewModel(repo)
         dailyWeatherList = ArrayList<DailyWeather>()

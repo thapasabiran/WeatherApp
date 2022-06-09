@@ -37,7 +37,13 @@ class HourlyWeatherAdapter(private var hourlyWeatherList: List<HourlyWeather>): 
 
         holder.hour.text = date.hour.toString()//cal.get(Calendar.HOUR_OF_DAY).toString()//format.format(date).toString()
         Picasso.get().load("https://openweathermap.org/img/wn/" + hourlyWeatherItemVM.icon + "@4x.png").into(holder.icon)
-        holder.temp.text = hourlyWeatherItemVM.temp.toString()
+
+        if (true) {
+            var C = (hourlyWeatherItemVM.temp - 32) / 1.8
+            holder.temp.text = String.format("%.2f", C).toDouble().toString()
+        } else {
+            holder.temp.text = hourlyWeatherItemVM.temp.toString()
+        }
     }
 
     override fun getItemCount(): Int {

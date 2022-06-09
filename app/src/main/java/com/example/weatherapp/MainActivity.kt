@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity() {
                 println(pref.getString("location", "default"))
                 println(pref.getString("units", "default"))
             }
-            //val frontPageIntent = Intent(this, FrontPageActivity::class.java)
-            //startActivity(frontPageIntent)
+            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
+            startActivity(frontPageIntent)
         }
 
 //        val api = RetroApiInterface.create()
