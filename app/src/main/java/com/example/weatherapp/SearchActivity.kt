@@ -18,6 +18,6 @@ class SearchActivity : AppCompatActivity() {
 
         repo = WeatherRepository(RetroApiInterface.create(),this)
         vm = WeatherViewModel(repo)
-        vm.searchLocation(this, "London")
+        vm.saveLocation(this, "London")
     }
 }
