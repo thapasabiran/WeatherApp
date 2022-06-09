@@ -1,8 +1,5 @@
 package com.example.weatherapp
 
-
-import android.content.Context
-import android.location.Geocoder
 import android.content.Intent
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +12,8 @@ import com.example.weatherapp.api.WeatherRepository
 import com.example.weatherapp.api.WeatherViewModel
 import com.example.weatherapp.databinding.ActivityMainBinding
 import java.util.*
+import android.content.Context
+import android.location.Geocoder
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding

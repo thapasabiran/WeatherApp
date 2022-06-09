@@ -1,10 +1,6 @@
 package com.example.weatherapp.database
 
 import android.content.Context
-import com.google.gson.JsonParser
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
