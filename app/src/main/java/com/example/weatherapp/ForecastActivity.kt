@@ -19,10 +19,10 @@ class ForecastActivity : AppCompatActivity() {
     lateinit var hourlyWeatherList: ArrayList<HourlyWeather>
     lateinit var dailyWeatherAdapter: DailyWeatherAdapter
     lateinit var hourlyWeatherAdapter: HourlyWeatherAdapter
+    lateinit var vm : WeatherViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForecastBinding.inflate(layoutInflater)
-        lateinit var vm : WeatherViewModel
         setContentView(binding.root)
 
         binding.forecastWetConTextView.text = intent.getStringExtra("weatherCondition")
@@ -34,13 +34,15 @@ class ForecastActivity : AppCompatActivity() {
 
         vm = WeatherViewModel(repo)
         dailyWeatherList = ArrayList<DailyWeather>()
-        vm.weather?.observe(this) {
+//        vm.getDailyWeather()
+//        vm.getHourlyWeather()
+        vm.getDailyWeather()?.observe(this) {
             dailyWeatherList = it as ArrayList<DailyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
             dailyWeatherAdapter.setDailyWeather(dailyWeatherList)
         }
 
         hourlyWeatherList = ArrayList<HourlyWeather>()
-        vm.weatherHourly?.observe(this) {
+        vm.getHourlyWeather()?.observe(this) {
             hourlyWeatherList = it as ArrayList<HourlyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
             hourlyWeatherAdapter.setHourlyWeather(hourlyWeatherList)
         }

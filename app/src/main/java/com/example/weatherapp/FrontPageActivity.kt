@@ -18,7 +18,7 @@ import com.example.weatherapp.databinding.ActivityFrontPageBinding
 class FrontPageActivity : AppCompatActivity() {
     lateinit var binding: ActivityFrontPageBinding
     lateinit var vm : WeatherViewModel
-    lateinit var currentWeatherList: ArrayList<CurrentWeather>
+    lateinit var currentWeather: CurrentWeather
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFrontPageBinding.inflate(layoutInflater)
@@ -30,26 +30,27 @@ class FrontPageActivity : AppCompatActivity() {
         val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
         vm = WeatherViewModel(repo)
-        currentWeatherList = ArrayList<CurrentWeather>()
-        vm.weatherCurrent?.observe(this) {
-            currentWeatherList = it as ArrayList<CurrentWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
-            binding.humidityTextView.text = currentWeatherList[0].humidity.toString()
-            binding.windyTextView.setText(currentWeatherList[0].wind_speed.toString() + " m/s")
-            binding.cloudyTextView.text = currentWeatherList[0].clouds.toString() + " %"
+        currentWeather = CurrentWeather(0,0,0,0,0.0,0.0,0,0,0.0,0.0,0,0,0.0,0,0,"","","")
+        vm.getCurrentWeatherSingle()?.observe(this) {
+            currentWeather = it
+            binding.humidityTextView.text = currentWeather.humidity.toString()
+            binding.windyTextView.text = currentWeather.wind_speed.toString() + " m/s"
+            binding.cloudyTextView.text = currentWeather.clouds.toString() + " %" //ToDo: Check if this is right
 
-            if (pref.getString("units", "K").equals("C")) {
-                var celcius = currentWeatherList[0].temp - 273.15
-                binding.tempTextView.text = celcius.toInt().toString() + " C"
-            } else if (pref.getString("units", "K").equals("F")) {
-                var fahrenheit = 1.8*(currentWeatherList[0].temp - 273.15) + 32
-                binding.tempTextView.text = fahrenheit.toInt().toString() + " F"
-            } else {
-                binding.tempTextView.text = currentWeatherList[0].temp.toInt().toString()
-            }
+//            if (pref.getString("units", "K").equals("C")) {
+//                var celcius = currentWeatherList[0].temp - 273.15
+//                binding.tempTextView.text = celcius.toInt().toString() + " C"
+//            } else if (pref.getString("units", "K").equals("F")) {
+//                var fahrenheit = 1.8*(currentWeatherList[0].temp - 273.15) + 32
+//                binding.tempTextView.text = fahrenheit.toInt().toString() + " F"
+//            } else {
+//                binding.tempTextView.text = currentWeatherList[0].temp.toInt().toString()
+//            }
+            binding.tempTextView.text = currentWeather.temp.toString()
 
 
-            binding.weatherDescriptionTextView.text = currentWeatherList[0].long_description.toString()
-            binding.locationTextView.text = pref.getString("location", "Tokyo")
+            binding.cloudyText.text = currentWeather.long_description.toString()
+            binding.LocationText.text = pref.getString("location", "Tokyo")
         }
 
 
@@ -57,10 +58,10 @@ class FrontPageActivity : AppCompatActivity() {
         binding.forcastButton.setOnClickListener {
             var forecastIntent = Intent(this, ForecastActivity::class.java)
             forecastIntent.putExtra("location", pref.getString("location", "Tokyo"))
-            forecastIntent.putExtra("temp", currentWeatherList[0].temp.toString())
+            forecastIntent.putExtra("temp", currentWeather.temp.toString())
 //            forecastIntent.putExtra("lowTemp", currentWeatherList[0].temp)
 //            forecastIntent.putExtra("highTemp", currentWeatherList[0].temp)
-            forecastIntent.putExtra("weatherCondition", currentWeatherList[0].long_description)
+            forecastIntent.putExtra("weatherCondition", currentWeather.long_description)
             startActivity(forecastIntent)
         }
     }

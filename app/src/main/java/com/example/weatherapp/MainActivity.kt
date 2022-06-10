@@ -27,6 +27,15 @@ class MainActivity : AppCompatActivity() {
         //Shared preferences are application-wide, getPreferences only applies to a single activity
         val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
+        val api = RetroApiInterface.create()
+        val repo = WeatherRepository(api, this)
+
+        vm = WeatherViewModel(repo)
+
+        //ToDo: Get the latitude and longitude based on user preference
+        //Hard coded at the moment
+        vm.updateWeather("43.651070","-79.347015", pref.getString("units", "standard")!!)
+
         val adapter = ArrayAdapter.createFromResource(this,
             R.array.temperature_units, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

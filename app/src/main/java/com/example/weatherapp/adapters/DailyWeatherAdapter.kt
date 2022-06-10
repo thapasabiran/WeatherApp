@@ -10,8 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.database.DailyWeather
 import com.example.weatherapp.database.HourlyWeather
+import com.example.weatherapp.database.Util.Companion.timestampToDayOfWeek
 import com.example.weatherapp.database.Util.Companion.timestampToDayOfWeekShort
-import com.example.weatherapp.database.Util.Companion.toUserSelectedUnit
+//import com.example.weatherapp.database.Util.Companion.toUserSelectedUnit
 import com.example.weatherapp.databinding.DailyWeatherLayoutBinding
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
@@ -28,10 +29,13 @@ class DailyWeatherAdapter(private var dailyWeatherList: List<DailyWeather>, priv
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: DailyWeatherViewHolder, position: Int) {
         val dailyWeatherItemVM = dailyWeatherList[position]
-        holder.day.text = timestampToDayOfWeekShort(dailyWeatherItemVM.dt)
+        holder.day.text = timestampToDayOfWeek(dailyWeatherItemVM.dt)
 
         //Load the icon from open weather api based on icon
         Picasso.get().load("https://openweathermap.org/img/wn/" + dailyWeatherItemVM.icon + "@4x.png").into(holder.icon)
+        holder.tempLow.text = dailyWeatherItemVM.temp_min.toString()
+        holder.tempHigh.text = dailyWeatherItemVM.temp_max.toString()
+
 
 //        //ToDo: Convert to user preferred unit
 //        if (preferences.getString("units", "K").equals("C")) {
@@ -44,7 +48,7 @@ class DailyWeatherAdapter(private var dailyWeatherList: List<DailyWeather>, priv
 //            holder.tempLow.text = dailyWeatherItemVM.temp_min.toString()
 //        }
 
-        holder.tempLow.text = toUserSelectedUnit(preferences, dailyWeatherItemVM.temp_min)
+//        holder.tempLow.text = toUserSelectedUnit(preferences, dailyWeatherItemVM.temp_min)
 
 //        //ToDo: Convert to user preferred unit
 ////        preferences.getString("units", )
@@ -58,7 +62,7 @@ class DailyWeatherAdapter(private var dailyWeatherList: List<DailyWeather>, priv
 //            holder.tempLow.text = dailyWeatherItemVM.temp_max.toString()
 //        }
 
-        holder.tempLow.text = toUserSelectedUnit(preferences, dailyWeatherItemVM.temp_max)
+//        holder.tempLow.text = toUserSelectedUnit(preferences, dailyWeatherItemVM.temp_max)
 
 
 //        holder.tempLow.text = dailyWeatherItemVM.temp_min.toString()

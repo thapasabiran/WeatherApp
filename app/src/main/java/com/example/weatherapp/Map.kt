@@ -25,6 +25,7 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
     lateinit var binding: ActivityMapBinding
     lateinit var repo: WeatherRepository
     lateinit var vm: WeatherViewModel
+    var pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
     var lat = 0.0
     var long = 0.0
     var marker : Marker? = null
@@ -34,8 +35,8 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        var pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
-        var unit = pref.getString("units","C")
+//        var pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+        var unit = pref.getString("units","C") //ToDo: C and F changed to metric and imperial
 
         repo = WeatherRepository(RetroApiInterface.create(),this)
         vm = WeatherViewModel(repo)
@@ -67,7 +68,9 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             if (marker != null)
                 marker!!.remove()
             marker = gMap.addMarker(MarkerOptions().position(location))
-            vm.getWeather(lat.toString(),long.toString())
+//            val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+            //Added units so that we can make api call based on units
+            vm.getWeather(lat.toString(),long.toString(), pref.getString("units", "standard")!!)
         }
     }
 }

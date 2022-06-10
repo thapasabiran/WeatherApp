@@ -26,18 +26,20 @@ class HourlyWeatherAdapter(private var hourlyWeatherList: List<HourlyWeather>, p
         val hourlyWeatherItemVM = hourlyWeatherList[position]
 
         holder.hour.text = timestampToTime24(hourlyWeatherItemVM.dt)
+        //Image icon is provided by open weather api based on icon value
         Picasso.get().load("https://openweathermap.org/img/wn/" + hourlyWeatherItemVM.icon + "@4x.png").into(holder.icon)
+        holder.temp.text = hourlyWeatherItemVM.temp.toString()
 
-        //ToDo: Convert to user preferred unit
-        if (preferences.getString("units", "K").equals("C")) {
-            var celcius = hourlyWeatherItemVM.temp - 273.15
-            holder.temp.text = celcius.toInt().toString()
-        } else if (preferences.getString("units", "default").equals("F")) {
-            var fahrenheit = 1.8*(hourlyWeatherItemVM.temp-273.15) + 32
-            holder.temp.text = fahrenheit.toInt().toString()
-        } else {
-            holder.temp.text = hourlyWeatherItemVM.temp.toString()
-        }
+//        //ToDo: Convert to user preferred unit
+//        if (preferences.getString("units", "K").equals("C")) {
+//            var celcius = hourlyWeatherItemVM.temp - 273.15
+//            holder.temp.text = celcius.toInt().toString()
+//        } else if (preferences.getString("units", "default").equals("F")) {
+//            var fahrenheit = 1.8*(hourlyWeatherItemVM.temp-273.15) + 32
+//            holder.temp.text = fahrenheit.toInt().toString()
+//        } else {
+//            holder.temp.text = hourlyWeatherItemVM.temp.toString()
+//        }
     }
 
     override fun getItemCount(): Int {

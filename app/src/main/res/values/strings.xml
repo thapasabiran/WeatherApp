@@ -2,8 +2,8 @@
     <string name="app_name">Weather App</string>
 
     <string-array name="temperature_units">
-        <item>C</item>
-        <item>F</item>
+        <item>metric</item>
+        <item>imperial</item>
     </string-array>
     <string name="location_zi">Location (ZIP or city)</string>
 

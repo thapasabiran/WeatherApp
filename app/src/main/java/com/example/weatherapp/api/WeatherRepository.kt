@@ -114,6 +114,4 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
             }
         }
     }
-
-
 }
