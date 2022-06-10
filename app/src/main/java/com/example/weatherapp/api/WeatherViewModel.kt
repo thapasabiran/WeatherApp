@@ -25,9 +25,9 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             var res = repo.getWeather(latitude,longitude)
             if(res.isSuccessful) {
+                println(res.body())
                 currentWeather.postValue(JsonDbHelper.toCurrentWeather(res.body()!!))
             }
-
         }
     }
 

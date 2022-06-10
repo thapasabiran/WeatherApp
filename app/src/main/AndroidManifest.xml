@@ -23,7 +23,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyD9J3niqqTthgXk1_hvhD4bhAgpCppT5VQ" />
         <activity
-            android:name=".Map"
+            android:name=".MapActivity"
             android:exported="false" />
         <activity
             android:name=".AppPreferencesActivity"

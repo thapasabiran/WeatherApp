@@ -1,5 +1,7 @@
 package com.example.weatherapp
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.AbsListView
 import androidx.appcompat.app.AppCompatActivity
@@ -73,6 +75,14 @@ class ForecastActivity : AppCompatActivity() {
         hourlyRecyclerView.layoutManager = layoutManager
         hourlyRecyclerView.adapter = hourlyWeatherAdapter
 
+        binding.settingsButton.setOnClickListener {
+            val appPreferenceIntent = Intent(this, AppPreferencesActivity::class.java)
+            startActivity(appPreferenceIntent)
+        }
+        binding.backButton.setOnClickListener {
+            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
+            startActivity(frontPageIntent)
+        }
         //if user start scrolling for more data, get it from db based on offset
         hourlyRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {

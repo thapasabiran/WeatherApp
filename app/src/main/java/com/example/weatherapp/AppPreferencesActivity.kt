@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.location.Address
@@ -8,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import com.example.weatherapp.databinding.ActivityAppPreferencesBinding
-import com.example.weatherapp.databinding.ActivityFrontPageBinding
 
 class AppPreferencesActivity : AppCompatActivity() {
     val okColor = Color.parseColor("#E0E0E0")
@@ -88,6 +88,16 @@ class AppPreferencesActivity : AppCompatActivity() {
                 putBoolean("useMetricUnits", isChecked)
                 apply()
             }
+        }
+
+        binding.mapSearch.setOnClickListener {
+            val mapIntent = Intent(this, MapActivity::class.java)
+            startActivity(mapIntent)
+        }
+
+        binding.backButtonSettings.setOnClickListener {
+            val forecastIntent = Intent(this, ForecastActivity::class.java)
+            startActivity(forecastIntent)
         }
 
     }
