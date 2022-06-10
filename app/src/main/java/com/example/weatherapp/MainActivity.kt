@@ -80,12 +80,13 @@ class MainActivity : AppCompatActivity() {
                 putString("location", binding.welcomeLocationTextEdit.text.toString())
                 putString("latitude", lat)
                 putString("longitude", long)
+                putString("country", address.countryName)
                 putString("tempUnits", binding.spinner.selectedItem.toString())
                 putString("units",Util.getDefaultUnits(binding.spinner.selectedItem.toString()))
                 apply()
             }
             vm.updateWeather(lat, long).join()
-            val frontPageIntent = Intent(this, SearchActivity::class.java)
+            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
             //finish()
         } else {

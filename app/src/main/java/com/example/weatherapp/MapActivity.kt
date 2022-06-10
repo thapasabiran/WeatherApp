@@ -23,12 +23,13 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
 
 
-class Map : AppCompatActivity(), OnMapReadyCallback {
+class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var gMap: GoogleMap
     lateinit var binding: ActivityMapBinding
     lateinit var repo: WeatherRepository
@@ -44,7 +45,7 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
-        pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+        pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
         repo = WeatherRepository(RetroApiInterface.create(),this)
         vm = WeatherViewModel(repo)
@@ -54,8 +55,8 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
 
         }
         binding.backButtonMap.setOnClickListener {
-            val frontPageIntent = Intent(this, SearchActivity::class.java)
-            startActivity(frontPageIntent)
+            val appPreferenceIntent = Intent(this, AppPreferencesActivity::class.java)
+            startActivity(appPreferenceIntent)
             finish()
         }
         binding.selectLocation.setOnClickListener {
@@ -64,23 +65,22 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 GlobalScope.launch(Dispatchers.Main) {
                     setLocation()
-
                 }
             }
         }
 
     }
     suspend fun setLocation() {
-        vm.updateWeather(lat.toString(), long.toString())
+        vm.updateWeather(lat.toString(), long.toString()).join()
         with(pref.edit()) {
             putString("location", location)
             putString("latitude", lat.toString())
             putString("longitude", long.toString())
+            apply()
         }
         Toast.makeText(this, "Successfully updated location", Toast.LENGTH_SHORT).show()
-        val frontPageIntent = Intent(this, SearchActivity::class.java)
-        startActivity(frontPageIntent)
-        finish()
+        val appPreferenceIntent = Intent(this, AppPreferencesActivity::class.java)
+        startActivity(appPreferenceIntent)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

@@ -1,6 +1,7 @@
 package com.example.weatherapp
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,5 +59,14 @@ class ForecastActivity : AppCompatActivity() {
         hourlyWeatherAdapter = HourlyWeatherAdapter(hourlyWeatherList, pref)
         hourlyRecyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, true)
         hourlyRecyclerView.adapter = hourlyWeatherAdapter
+
+        binding.settingsButton.setOnClickListener {
+            val appPreferenceIntent = Intent(this, AppPreferencesActivity::class.java)
+            startActivity(appPreferenceIntent)
+        }
+        binding.backButton.setOnClickListener {
+            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
+            startActivity(frontPageIntent)
+        }
     }
 }

@@ -28,7 +28,6 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
                 println(res.body())
                 currentWeather.postValue(JsonDbHelper.toCurrentWeather(res.body()!!))
             }
-
         }
     }
 
