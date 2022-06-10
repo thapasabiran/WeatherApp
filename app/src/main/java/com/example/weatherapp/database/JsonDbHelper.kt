@@ -19,8 +19,8 @@ class JsonDbHelper {
             return CurrentWeather(
                 null,
                 dt = current.getLong("dt"),
-                sunrise = current.getLong("sunrise"),
-                sunset = current.getLong("sunset"),
+                sunrise = if(current.has("sunrise")) current.getLong("sunrise") else 0,
+                sunset = if(current.has("sunset")) current.getLong("sunset") else 0,
                 temp = current.getDouble("temp"),
                 feels_like = current.getDouble("feels_like"),
                 pressure = current.getInt("pressure"),
@@ -80,40 +80,41 @@ class JsonDbHelper {
             val list = ArrayList<DailyWeather>()
             //{"dt":1655150400,"sunrise":1655124019,"sunset":1655177460,"moonrise":1655176320,"moonset":1655120520,"moon_phase":0.47,"temp":{"day":31.29,"min":15.72,"max":33.07,"night":22.03,"eve":28.35,"morn":19.77},"feels_like":{"day":29.17,"night":20.84,"eve":26.87,"morn":19.26},"pressure":1012,"humidity":11,"dew_point":-2.22,"wind_speed":5.68,"wind_deg":329,"wind_gust":6.86,"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"01d"}],"clouds":0,"pop":0.04,"uvi":10}]}
             (0 until hourly.length()).mapTo(list) {
+                val current = hourly.getJSONObject(it)
                 DailyWeather(
                     null,
-                    hourly.getJSONObject(it).getLong("dt"),
-                    hourly.getJSONObject(it).getLong("sunrise"),
-                    hourly.getJSONObject(it).getLong("sunset"),
-                    hourly.getJSONObject(it).getLong("moonrise"),
-                    hourly.getJSONObject(it).getLong("moonset"),
-                    hourly.getJSONObject(it).getDouble("moon_phase"),
-                    hourly.getJSONObject(it).getJSONObject("temp").getDouble("min"),
-                    hourly.getJSONObject(it).getJSONObject("temp").getDouble("max"),
-                    hourly.getJSONObject(it).getJSONObject("temp").getDouble("day"),
-                    hourly.getJSONObject(it).getJSONObject("temp").getDouble("night"),
-                    hourly.getJSONObject(it).getJSONObject("temp").getDouble("eve"),
-                    hourly.getJSONObject(it).getJSONObject("temp").getDouble("morn"),
-                    hourly.getJSONObject(it).getInt("pressure"),
-                    hourly.getJSONObject(it).getInt("humidity"),
-                    hourly.getJSONObject(it).getDouble("dew_point"),
-                    hourly.getJSONObject(it).getDouble("wind_speed"),
-                    hourly.getJSONObject(it).getInt("wind_deg"),
-                    hourly.getJSONObject(it).getDouble("wind_gust"),
-                    hourly.getJSONObject(it).getJSONArray("weather").getJSONObject(0).getInt("id"),
-                    hourly.getJSONObject(it).getJSONArray("weather").getJSONObject(0)
+                    current.getLong("dt"),
+                    if(current.has("sunrise")) current.getLong("sunrise") else 0,
+                    if(current.has("sunset")) current.getLong("sunset") else 0,
+                    if(current.has("moonrise")) current.getLong("moonrise") else 0,
+                    if(current.has("moonset")) current.getLong("moonset") else 0,
+                    if(current.has("moon_phase")) current.getDouble("moon_phase") else 0.0,
+                    current.getJSONObject("temp").getDouble("min"),
+                    current.getJSONObject("temp").getDouble("max"),
+                    current.getJSONObject("temp").getDouble("day"),
+                    current.getJSONObject("temp").getDouble("night"),
+                    current.getJSONObject("temp").getDouble("eve"),
+                    current.getJSONObject("temp").getDouble("morn"),
+                    current.getInt("pressure"),
+                    current.getInt("humidity"),
+                    current.getDouble("dew_point"),
+                    current.getDouble("wind_speed"),
+                    current.getInt("wind_deg"),
+                    current.getDouble("wind_gust"),
+                    current.getJSONArray("weather").getJSONObject(0).getInt("id"),
+                    current.getJSONArray("weather").getJSONObject(0)
                         .getString("main"),
-                    hourly.getJSONObject(it).getJSONArray("weather").getJSONObject(0)
+                    current.getJSONArray("weather").getJSONObject(0)
                         .getString("description"),
-                    hourly.getJSONObject(it).getJSONArray("weather").getJSONObject(0)
+                    current.getJSONArray("weather").getJSONObject(0)
                         .getString("icon"),
-                    hourly.getJSONObject(it).getInt("clouds"),
-                    hourly.getJSONObject(it).getDouble("pop"),
-                    if (hourly.getJSONObject(it).has("rain")) hourly.getJSONObject(it)
+                    current.getInt("clouds"),
+                    current.getDouble("pop"),
+                    if (current.has("rain")) hourly.getJSONObject(it)
                         .getDouble("rain") else 0.0,
-                    if (hourly.getJSONObject(it).has("snow")) hourly.getJSONObject(it)
+                    if (current.has("snow")) hourly.getJSONObject(it)
                         .getDouble("snow") else 0.0,
-                    hourly.getJSONObject(it).getDouble("uvi")
+                    current.getDouble("uvi")
                 )
             }
             return list
