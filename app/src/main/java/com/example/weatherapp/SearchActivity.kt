@@ -18,7 +18,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         repo = WeatherRepository(RetroApiInterface.create(),this)
-        vm = WeatherViewModel(this, repo)
+        vm = WeatherViewModel(repo)
 
         binding.mapSearch.setOnClickListener {
             val frontPageIntent = Intent(this, Map::class.java)

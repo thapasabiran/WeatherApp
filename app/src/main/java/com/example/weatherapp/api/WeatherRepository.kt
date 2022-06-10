@@ -2,6 +2,7 @@ package com.example.weatherapp.api
 
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import com.example.weatherapp.api.RetroApiInterface
 import com.example.weatherapp.database.*
@@ -17,7 +18,8 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
-        inter.getWeather(latitude, longitude, pref.getString("Units","metric")!!)
+        inter.getWeather(latitude, longitude, pref.getString("units","standard")!!)
+
 
     //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
 
@@ -78,43 +80,39 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getAlertsObservable()
     }
 
-    fun updateWeather(latitude : String, longitude : String) {
-        CoroutineScope(Dispatchers.IO).launch {
-            var res = getWeather(latitude, longitude)
-            if (res.isSuccessful) {
+    suspend fun updateWeather(latitude : String, longitude : String) {
+        var res = getWeather(latitude, longitude)
+        if (res.isSuccessful) {
 
-                var json = res.body()
-                //val dbHelper = JsonDbHelper()
+            var json = res.body()
+            //val dbHelper = JsonDbHelper()
 
-                val currentWeather = JsonDbHelper.toCurrentWeather(json!!)
-                val dailyWeatherList = JsonDbHelper.toListDailyWeather(json)
-                val hourlyWeather = JsonDbHelper.toListHourlyWeather(json)
+            val currentWeather = JsonDbHelper.toCurrentWeather(json!!)
+            val dailyWeatherList = JsonDbHelper.toListDailyWeather(json)
+            val hourlyWeather = JsonDbHelper.toListHourlyWeather(json)
 
-                //clear the DB, clearing/inserting is faster than updating
-                db?.clearCurrentWeather()
-                db?.clearHourlyWeather()
-                db?.clearDailyWeather()
-                db?.clearAlerts()
+            //clear the DB, clearing/inserting is faster than updating
+            db?.clearCurrentWeather()
+            db?.clearHourlyWeather()
+            db?.clearDailyWeather()
+            db?.clearAlerts()
 
-                //insert items into database
-                insertCurrentWeather(currentWeather)
-                for(item in dailyWeatherList){
-                    insertDailyWeather(item)
-                }
-                for(item in hourlyWeather){
-                    insertHourlyWeather(item)
-                }
-
-                if(json.contains("alerts")){
-                    val alerts = JsonDbHelper.toAlerts(json)
-                    for(item in alerts){
-                        insertAlert(item)
-                    }
-                }
-
+            //insert items into database
+            insertCurrentWeather(currentWeather)
+            for(item in dailyWeatherList){
+                insertDailyWeather(item)
             }
+            for(item in hourlyWeather){
+                insertHourlyWeather(item)
+            }
+
+            if(json.contains("alerts")){
+                val alerts = JsonDbHelper.toAlerts(json)
+                for(item in alerts){
+                    insertAlert(item)
+                }
+            }
+
         }
     }
-
-
 }

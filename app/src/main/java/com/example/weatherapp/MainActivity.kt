@@ -43,12 +43,13 @@ class MainActivity : AppCompatActivity() {
             startActivity(frontPageIntent)
         }
 
+        val api = RetroApiInterface.create()
         val adapter = ArrayAdapter.createFromResource(this,
             R.array.temperature_units, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinner.adapter = adapter
         repo = WeatherRepository(RetroApiInterface.create(), this)
-        vm = WeatherViewModel(this,repo)
+        vm = WeatherViewModel(repo)
 
         //Need to add location validation still
         binding.welcomeContinueButton.setOnClickListener {
@@ -68,11 +69,10 @@ class MainActivity : AppCompatActivity() {
     //with all weather data for the given location
     suspend fun initialize() {
         val location = binding.welcomeLocationTextEdit.text.toString()
-        if (location != "" && vm.isValidLocation(location).await()) {
-            var address = vm.searchLocation(location).await()
+        if (location != "" && vm.isValidLocation(this, location).await()) {
+            var address = vm.searchLocation(this, location).await()
             val lat = address!!.latitude.toString()
             val long = address!!.longitude.toString()
-
             //make sure pref is set before calling updateWeather
             with(pref.edit()) {
                 putString("location", binding.welcomeLocationTextEdit.text.toString())
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                 putString("units",Util.getDefaultUnits(binding.spinner.selectedItem.toString()))
                 apply()
             }
-            vm.updateWeather(lat, long)
+            vm.updateWeather(lat, long).join()
             val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
         } else {
