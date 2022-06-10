@@ -7,7 +7,9 @@ import androidx.lifecycle.MutableLiveData
 import com.example.weatherapp.api.RetroApiInterface
 import com.example.weatherapp.api.WeatherRepository
 import com.example.weatherapp.api.WeatherViewModel
+import com.example.weatherapp.database.CurrentWeather
 import com.example.weatherapp.database.DailyWeather
+import com.example.weatherapp.database.HourlyWeather
 import com.example.weatherapp.database.WeatherDao
 import io.reactivex.rxjava3.core.Flowable.fromArray
 import io.reactivex.rxjava3.core.Flowable.fromArray
@@ -17,6 +19,7 @@ import io.reactivex.rxjava3.core.Observable.fromArray
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.parallel.ParallelFlowable.fromArray
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.runBlocking
 import okhttp3.internal.notifyAll
 import org.junit.Before
 import org.junit.Rule
@@ -27,10 +30,11 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
 import org.mockito.MockitoAnnotations
+import org.robolectric.RobolectricTestRunner
 import java.util.*
 
 
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class WeatherViewModelTest {
 
     lateinit var vm : WeatherViewModel
@@ -70,38 +74,56 @@ class WeatherViewModelTest {
             DailyWeather(123,0,0,0,0,0,0.0,1.5*1,0.0,0.0,0.0,0.0,
                 0.0,0,0,0.0,0.0,0,0.0,0,"","","",0,
                 0.0,0.0,0.0,0.0)
-
-
-
-        )
-
-                )
+        ))
 
         var liveList = MutableLiveData<List<DailyWeather>>()
         liveList.postValue(fakeList)
 
-        Mockito.`when`(repo.getDailyWeather())
+        Mockito.`when`(vm.getDailyWeather())
             .thenReturn(liveList)
-
-
 
         val result = vm.getDailyWeather()
 
         assertEquals(result?.value,fakeList)
-        //assertEquals(1,1)
-//
-//    result.subscribeBy(
-//      onNext = {
-//        assertEquals(listOf<DailyWeather>(
-//        DailyWeather(123,0,0,0,0,0,0.0,1.5*1,0.0,0.0,0.0,0.0,
-//          0.0,0,0,0.0,0.0,0,0.0,0,"","","",0,
-//          0.0,0.0,0.0,0.0)
-//        ),it)
-//      },
-//      onError = { println("error :$it")}
-//    )
+    }
+
+    @Test
+    fun getHourlyWeatherTest(){
+        var fakeList : List<HourlyWeather> = (listOf(
+            HourlyWeather(123,0,0.0,0.0,0,0,0.0,0.0,0,0,0.0,0,
+                0.0,0,"","","",0.0)
+        ))
+
+        var liveList = MutableLiveData<List<HourlyWeather>>()
+        liveList.postValue(fakeList)
+
+
+            Mockito.`when`(vm.getHourlyWeather()).thenReturn(liveList)
+
+            val result = vm.getHourlyWeather()
+
+            assertEquals(result?.value, fakeList)
 
     }
+
+    @Test
+    fun getCurrentWeatherSingleTest(){
+        var fakeList =
+            CurrentWeather(123,0,0,0,0.0,0.0,0,0,0.0,0.0,0,0,
+                0.0,0,0,"","","")
+
+        var liveList = MutableLiveData<CurrentWeather>()
+        liveList.postValue(fakeList)
+
+        Mockito.`when`(vm.getCurrentWeatherSingle())
+            .thenReturn(liveList)
+
+        val result = vm.getCurrentWeatherSingle()
+
+        assertEquals(result?.value,fakeList)
+    }
+
+
     @Test
     fun `given repository when calling Weatherlist then list is empty and assert its empty`() {
 
