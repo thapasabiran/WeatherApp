@@ -3,6 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+<<<<<<< HEAD
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/drawable/ic_globe_svgrepo_com.xml" value="0.1215" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_app_preferences.xml" value="0.4" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.25025641025641027" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_map.xml" value="0.264" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_model_test.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_search.xml" value="0.152" />
+        <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_warning.xml" value="0.264" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_model_test.xml" value="0.36666666666666664" />
+=======
         <entry key="..\:/Users/sabir/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/simple_spinner_dropdown_item.xml" value="0.2671875" />
         <entry key="..\:/Users/sabir/AppData/Local/Android/Sdk/platforms/android-32/data/res/layout/simple_spinner_item.xml" value="0.2671875" />
         <entry key="..\:/Users/sabir/Desktop/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.264" />
@@ -18,6 +29,7 @@
         <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/activity_warning.xml" value="0.2671875" />
         <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/daily_weather_layout.xml" value="0.264" />
         <entry key="..\:/Users/sabir/Desktop/project2/WeatherApp/app/src/main/res/layout/hourly_weather_layout.xml" value="0.209375" />
+>>>>>>> e2c99527368d533a0e7c59f2b4754d749f2ada8f
       </map>
     </option>
   </component>

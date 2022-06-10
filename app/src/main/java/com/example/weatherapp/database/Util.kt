@@ -73,5 +73,11 @@ class Util {
         fun kelvinToFahrenheit(d : Double) : String {
             return round((d-273)*(9/5)+32).toString()
         }
+
+        //Takes a C or F and returns the appropriate unit
+        //Input value should be guaranteed to be C or F
+        fun getDefaultUnits(s : String) : String {
+            return if (s == "F") "imperial" else "metric"
+        }
     }
 }
