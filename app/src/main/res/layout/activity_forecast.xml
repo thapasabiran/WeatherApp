@@ -8,7 +8,7 @@
     tools:context=".ForecastActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/forecastBackgroundImg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
@@ -48,7 +48,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <ScrollView
-            android:id="@+id/scrollView2"
+            android:id="@+id/forecastScrollView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"

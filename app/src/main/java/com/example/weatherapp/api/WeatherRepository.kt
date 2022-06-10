@@ -51,6 +51,10 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
         return db?.getHourlyWeather()
     }
 
+    fun getHourlyWeather(limit: Int, offSet: Int): LiveData<List<HourlyWeather>>? {
+        return db?.getHourlyWeather(limit, offSet)
+    }
+
     fun getDailyWeather() : LiveData<List<DailyWeather>>? {
         return db?.getDailyWeather()
     }
