@@ -13,10 +13,11 @@ import kotlinx.coroutines.launch
 class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     val db : WeatherDao? = AppDatabase.getInstance(context)?.weatherDao()
+    val pref = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
 
     //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
-        inter.getWeather(latitude, longitude)
+        inter.getWeather(latitude, longitude, pref.getString("Units","metric")!!)
 
     //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
 

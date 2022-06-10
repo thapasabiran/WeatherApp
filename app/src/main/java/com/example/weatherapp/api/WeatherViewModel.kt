@@ -12,10 +12,12 @@ import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.*
 import java.util.*
 
-class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
+class WeatherViewModel(context: Context, val repo : WeatherRepository) : ViewModel() {
     var currentWeather = MutableLiveData<CurrentWeather>()
     var job : Job? = null
+    lateinit var geocoder: Geocoder
     init {
+        geocoder = Geocoder(context, Locale.getDefault())
     }
     fun getWeather(latitude : String, longitude : String) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -28,16 +30,16 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
     }
 
     //Update the weather from API and put it into the database
-    fun updateWeather(latitude : String, longitude : String) {
-        /*job = CoroutineScope(Dispatchers.IO).launch {
-            var res = repo.getWeather(latitude, longitude)
-            if (res.isSuccessful) {
-                println(res.body())
-            }
-        }*/
-
-        repo.updateWeather(latitude, longitude)
-    }
+//    fun updateWeather(latitude : String, longitude : String) {
+//        /*job = CoroutineScope(Dispatchers.IO).launch {
+//            var res = repo.getWeather(latitude, longitude)
+//            if (res.isSuccessful) {
+//                println(res.body())
+//            }
+//        }*/
+//
+//        repo.updateWeather(latitude, longitude)
+//    }
 
     fun getDailyWeather(){
         //weather = repo.getDailyWeather()
@@ -48,10 +50,23 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
     }
 
     //TODO: Put inside coroutine
-    fun searchLocation(context: Context, location: String) : Address?  {
-        var geocoder = Geocoder(context, Locale.getDefault())
-        var address = geocoder.getFromLocationName(location, 3)
-        return if (!address.isEmpty()) address.get(0) else null
+    fun searchLocation(location: String) : Deferred<Address?>  {
+        return GlobalScope.async(Dispatchers.IO) {
+            var address = geocoder.getFromLocationName(location, 3)
+            if (!address.isEmpty()) address.get(0) else null
+        }
+    }
+
+    //Checks if the given string is a valid location
+    fun isValidLocation(location: String) : Deferred<Boolean> {
+        return GlobalScope.async(Dispatchers.IO) {
+            var address = geocoder.getFromLocationName(location, 3)
+            address.isNotEmpty()
+        }
+    }
+
+    fun updateWeather(latitude: String, longitude: String) {
+        repo.updateWeather(latitude,longitude)
     }
     fun setAsDefaultLocation(location: String) {
 

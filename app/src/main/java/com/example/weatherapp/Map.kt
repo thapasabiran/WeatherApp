@@ -38,7 +38,7 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
         var unit = pref.getString("units","C")
 
         repo = WeatherRepository(RetroApiInterface.create(),this)
-        vm = WeatherViewModel(repo)
+        vm = WeatherViewModel(this, repo)
         vm.currentWeather.observe(this) {
             binding.locationText.text = "Location"
             if (unit == "F")
@@ -53,7 +53,6 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             startActivity(frontPageIntent)
             frontPageIntent.putExtra("lat",lat)
             frontPageIntent.putExtra("long",long)
-
         }
 
     }
