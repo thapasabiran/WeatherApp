@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity() {
 
         //ToDo: Get the latitude and longitude based on user preference
         //Hard coded at the moment
-        vm.updateWeather("43.651070","-79.347015", pref.getString("units", "standard")!!)
+        var units = if (pref.getString("units", "standard").equals("C")) "metric" else "imperial"
+        vm.updateWeather("43.651070","-79.347015", units)
 
         val adapter = ArrayAdapter.createFromResource(this,
             R.array.temperature_units, android.R.layout.simple_spinner_item)

@@ -26,7 +26,7 @@ class DailyWeatherAdapter(private var dailyWeatherList: List<DailyWeather>, priv
         return DailyWeatherViewHolder(binding)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+//    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: DailyWeatherViewHolder, position: Int) {
         val dailyWeatherItemVM = dailyWeatherList[position]
         holder.day.text = timestampToDayOfWeek(dailyWeatherItemVM.dt)

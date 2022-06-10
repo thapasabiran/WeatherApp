@@ -21,7 +21,7 @@ class HourlyWeatherAdapter(private var hourlyWeatherList: List<HourlyWeather>, p
         return HourlyWeatherViewHolder(binding)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+//    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: HourlyWeatherViewHolder, position: Int) {
         val hourlyWeatherItemVM = hourlyWeatherList[position]
 
