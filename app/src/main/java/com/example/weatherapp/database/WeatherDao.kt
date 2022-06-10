@@ -18,6 +18,9 @@ interface WeatherDao {
     @Query("SELECT * FROM HourlyWeather")
     fun getHourlyWeather() : LiveData<List<HourlyWeather>>?
 
+    @Query("SELECT * FROM HourlyWeather LIMIT :limit OFFSET :offSet")
+    fun getHourlyWeather(limit: Int, offSet: Int) : LiveData<List<HourlyWeather>>?
+
     @Query("SELECT * FROM DailyWeather")
     fun getDailyWeather() : LiveData<List<DailyWeather>>?
 

@@ -53,6 +53,13 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         return hourlyWeather
     }
 
+    fun getHourlyWeather(limit: Int, offset: Int): LiveData<List<HourlyWeather>>? {
+        viewModelScope.launch {
+            hourlyWeather = repo.getHourlyWeather(limit, offset)
+        }
+        return hourlyWeather
+    }
+
     fun getDailyWeatherObservable() : Observable<List<DailyWeather>>? {
         return repo.getDailyWeatherObservable()
     }
