@@ -29,6 +29,7 @@ class WeatherRepositoryTest {
 
     @Mock
     lateinit var dao: WeatherDao
+
    @Mock
     lateinit var inter :RetroApiInterface
     @Mock
@@ -41,7 +42,7 @@ class WeatherRepositoryTest {
 
     }
     @Test
-    suspend fun getWeatherTest(){
+   suspend fun getWeatherTest(){
    var fakeList =""
 
 
