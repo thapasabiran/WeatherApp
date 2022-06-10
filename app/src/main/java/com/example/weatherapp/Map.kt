@@ -54,7 +54,6 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             startActivity(frontPageIntent)
             frontPageIntent.putExtra("lat",lat)
             frontPageIntent.putExtra("long",long)
-
         }
 
     }
@@ -70,7 +69,7 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             marker = gMap.addMarker(MarkerOptions().position(location))
 //            val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
             //Added units so that we can make api call based on units
-            vm.getWeather(lat.toString(),long.toString(), pref.getString("units", "standard")!!)
+            vm.getWeather(lat.toString(),long.toString())
         }
     }
 }

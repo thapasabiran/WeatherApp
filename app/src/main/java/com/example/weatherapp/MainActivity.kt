@@ -13,45 +13,80 @@ import com.example.weatherapp.api.WeatherViewModel
 import com.example.weatherapp.databinding.ActivityMainBinding
 import java.util.*
 import android.content.Context
+import android.content.SharedPreferences
 import android.location.Geocoder
+import android.text.method.TextKeyListener.clear
+import androidx.core.view.isVisible
+import com.example.weatherapp.database.Util
+import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
     lateinit var repo : WeatherRepository
     lateinit var vm : WeatherViewModel
+    lateinit var pref : SharedPreferences
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //Shared preferences are application-wide, getPreferences only applies to a single activity
-        val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        //Comment this out if you want to skip the welcome page when there's already a stored pref
+        pref.edit().clear().commit()
+
+        if(pref.getString("location","") != "") {
+            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
+            startActivity(frontPageIntent)
+        }
 
         val api = RetroApiInterface.create()
-        val repo = WeatherRepository(api, this)
-
-        vm = WeatherViewModel(repo)
-
-        //ToDo: Get the latitude and longitude based on user preference
-        //Hard coded at the moment
-        var units = if (pref.getString("units", "standard").equals("C")) "metric" else "imperial"
-        vm.updateWeather("43.651070","-79.347015", units)
-
         val adapter = ArrayAdapter.createFromResource(this,
             R.array.temperature_units, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.spinner.adapter = adapter
+        repo = WeatherRepository(RetroApiInterface.create(), this)
+        vm = WeatherViewModel(repo)
 
         //Need to add location validation still
         binding.welcomeContinueButton.setOnClickListener {
+            binding.welcomeContinueButton.isVisible = false
+            binding.loadingBar.isVisible = true
+            GlobalScope.launch(Dispatchers.Main) { //Use main thread for toast to work
+                initialize()
+                binding.welcomeContinueButton.isVisible = true
+                binding.loadingBar.isVisible = false
+            }
+        }
 
-            with (pref.edit()) {
+
+    }
+
+    //Checks for valid location input and updates pref file and initializes roomDB
+    //with all weather data for the given location
+    suspend fun initialize() {
+        val location = binding.welcomeLocationTextEdit.text.toString()
+        if (location != "" && vm.isValidLocation(this, location).await()) {
+            var address = vm.searchLocation(this, location).await()
+            val lat = address!!.latitude.toString()
+            val long = address!!.longitude.toString()
+            //make sure pref is set before calling updateWeather
+            with(pref.edit()) {
                 putString("location", binding.welcomeLocationTextEdit.text.toString())
-                putString("units", binding.spinner.selectedItem.toString())
+                putString("latitude", lat)
+                putString("longitude", long)
+                putString("units",Util.getDefaultUnits(binding.spinner.selectedItem.toString()))
                 apply()
             }
+            vm.updateWeather(lat, long).join()
             val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
+        } else {
+            Toast.makeText(this, "Please enter a valid location", Toast.LENGTH_SHORT).show()
+            delay(300) //stops user from spam clicking button
         }
 
     }
