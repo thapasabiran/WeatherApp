@@ -35,18 +35,18 @@ class RetroApiInterfaceTest {
     }
 
     @Test
-    suspend fun getWeather(){
+    fun getWeather() {
         var mockRes = MockResponse()
         mockServer.enqueue(mockRes.setBody("[]"))
 
-        assertEquals("/data/2.5/onecall?","/data/2.5/onecall?")
 
-        @After
-        fun destroy() {
-            mockServer.shutdown()
-        }
+        assertEquals("/data/2.5/onecall?", "/data/2.5/onecall?")
 
     }
 
+    @After
+    fun destroy() {
+        mockServer.shutdown()
+    }
 
-}
+    }
