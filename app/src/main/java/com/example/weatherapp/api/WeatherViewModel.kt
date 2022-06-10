@@ -31,8 +31,8 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         repo.updateWeather(latitude, longitude)
     }
 
-    fun getDailyWeather(){
-        weather = repo.getDailyWeather()
+    fun getDailyWeather():LiveData<List<DailyWeather>>?{
+        return  repo.getDailyWeather()
     }
 
     fun getDailyWeatherObservable() : Observable<List<DailyWeather>>? {
