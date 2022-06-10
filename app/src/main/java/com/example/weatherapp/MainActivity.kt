@@ -38,9 +38,12 @@ class MainActivity : AppCompatActivity() {
         //Comment this out if you want to skip the welcome page when there's already a stored pref
         pref.edit().clear().commit()
 
+//        val frontPageIntent = Intent(this, SearchActivity::class.java)
+//        startActivity(frontPageIntent)
         if(pref.getString("location","") != "") {
             val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
+            //finish()
         }
 
         val api = RetroApiInterface.create()
@@ -51,7 +54,6 @@ class MainActivity : AppCompatActivity() {
         repo = WeatherRepository(RetroApiInterface.create(), this)
         vm = WeatherViewModel(repo)
 
-        //Need to add location validation still
         binding.welcomeContinueButton.setOnClickListener {
             binding.welcomeContinueButton.isVisible = false
             binding.loadingBar.isVisible = true
@@ -69,8 +71,8 @@ class MainActivity : AppCompatActivity() {
     //with all weather data for the given location
     suspend fun initialize() {
         val location = binding.welcomeLocationTextEdit.text.toString()
-        if (location != "" && vm.isValidLocation(this, location).await()) {
-            var address = vm.searchLocation(this, location).await()
+        var address = vm.searchLocation(this, location).await()
+        if (location != "" && address != null) {
             val lat = address!!.latitude.toString()
             val long = address!!.longitude.toString()
             //make sure pref is set before calling updateWeather
@@ -78,12 +80,14 @@ class MainActivity : AppCompatActivity() {
                 putString("location", binding.welcomeLocationTextEdit.text.toString())
                 putString("latitude", lat)
                 putString("longitude", long)
+                putString("tempUnits", binding.spinner.selectedItem.toString())
                 putString("units",Util.getDefaultUnits(binding.spinner.selectedItem.toString()))
                 apply()
             }
             vm.updateWeather(lat, long).join()
-            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
+            val frontPageIntent = Intent(this, SearchActivity::class.java)
             startActivity(frontPageIntent)
+            //finish()
         } else {
             Toast.makeText(this, "Please enter a valid location", Toast.LENGTH_SHORT).show()
             delay(300) //stops user from spam clicking button

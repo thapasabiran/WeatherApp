@@ -2,7 +2,10 @@ package com.example.weatherapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.location.Geocoder
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import com.example.weatherapp.api.RetroApiInterface
@@ -18,6 +21,10 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.util.*
 
 
 class Map : AppCompatActivity(), OnMapReadyCallback {
@@ -25,9 +32,10 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
     lateinit var binding: ActivityMapBinding
     lateinit var repo: WeatherRepository
     lateinit var vm: WeatherViewModel
-    var pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
+    lateinit var pref: SharedPreferences
     var lat = 0.0
     var long = 0.0
+    var location = ""
     var marker : Marker? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,41 +43,59 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
         setContentView(binding.root)
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
-//        var pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
-        var unit = pref.getString("units","C") //ToDo: C and F changed to metric and imperial
+        pref = getSharedPreferences("pref", Context.MODE_PRIVATE)
 
         repo = WeatherRepository(RetroApiInterface.create(),this)
         vm = WeatherViewModel(repo)
         vm.currentWeather.observe(this) {
-            binding.locationText.text = "Location"
-            if (unit == "F")
-                binding.temperatureText.text = Util.kelvinToFahrenheit(it.temp) + " F"
-            else
-                binding.temperatureText.text = Util.kelvinToCelsius(it.temp) + " C"
+            binding.locationText.text = location
+            binding.temperatureText.text = it.temp.toString() +"°${pref.getString("tempUnits","C")}"
 
         }
 
         binding.selectLocation.setOnClickListener {
-            val frontPageIntent = Intent(this, SearchActivity::class.java)
-            startActivity(frontPageIntent)
-            frontPageIntent.putExtra("lat",lat)
-            frontPageIntent.putExtra("long",long)
+            if (location == "") {
+                Toast.makeText(this, "Please select a valid location", Toast.LENGTH_SHORT).show()
+            } else {
+                GlobalScope.launch(Dispatchers.Main) {
+                    setLocation()
+
+                }
+            }
         }
 
+    }
+    suspend fun setLocation() {
+        vm.updateWeather(lat.toString(), long.toString())
+        with(pref.edit()) {
+            putString("location", location)
+            putString("latitude", lat.toString())
+            putString("longitude", long.toString())
+        }
+        val frontPageIntent = Intent(this, SearchActivity::class.java)
+        startActivity(frontPageIntent)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         gMap = googleMap
         gMap.setOnMapClickListener { latlng ->
+            var geocoder = Geocoder(this, Locale.getDefault())
             lat = latlng.latitude
             long = latlng.longitude
-            val location = LatLng(latlng.latitude, latlng.longitude)
-            if (marker != null)
-                marker!!.remove()
-            marker = gMap.addMarker(MarkerOptions().position(location))
-//            val pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
-            //Added units so that we can make api call based on units
-            vm.getWeather(lat.toString(),long.toString())
+            var addressList = geocoder.getFromLocation(lat,long,1)
+            if (addressList.isNotEmpty()) {
+                if (addressList.get(0).locality != null)
+                    location = addressList.get(0).locality
+                else
+                    location = addressList.get(0).countryName
+
+                if (marker != null)
+                    marker!!.remove()
+                marker = gMap.addMarker(MarkerOptions().position(LatLng(lat,long)))
+
+                //Added units so that we can make api call based on units
+                vm.getWeather(lat.toString(), long.toString())
+            }
         }
     }
 }
