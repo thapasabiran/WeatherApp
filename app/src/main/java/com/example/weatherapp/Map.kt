@@ -24,6 +24,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import java.util.*
 
 
@@ -52,7 +53,11 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             binding.temperatureText.text = it.temp.toString() +"°${pref.getString("tempUnits","C")}"
 
         }
-
+        binding.backButtonMap.setOnClickListener {
+            val frontPageIntent = Intent(this, SearchActivity::class.java)
+            startActivity(frontPageIntent)
+            finish()
+        }
         binding.selectLocation.setOnClickListener {
             if (location == "") {
                 Toast.makeText(this, "Please select a valid location", Toast.LENGTH_SHORT).show()
@@ -72,8 +77,10 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             putString("latitude", lat.toString())
             putString("longitude", long.toString())
         }
+        Toast.makeText(this, "Successfully updated location", Toast.LENGTH_SHORT).show()
         val frontPageIntent = Intent(this, SearchActivity::class.java)
         startActivity(frontPageIntent)
+        finish()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -82,8 +89,8 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
             var geocoder = Geocoder(this, Locale.getDefault())
             lat = latlng.latitude
             long = latlng.longitude
-            var addressList = geocoder.getFromLocation(lat,long,1)
-            if (addressList.isNotEmpty()) {
+            try {
+                var addressList = geocoder.getFromLocation(lat, long, 1)
                 if (addressList.get(0).locality != null)
                     location = addressList.get(0).locality
                 else
@@ -91,10 +98,13 @@ class Map : AppCompatActivity(), OnMapReadyCallback {
 
                 if (marker != null)
                     marker!!.remove()
-                marker = gMap.addMarker(MarkerOptions().position(LatLng(lat,long)))
+                marker = gMap.addMarker(MarkerOptions().position(LatLng(lat, long)))
 
                 //Added units so that we can make api call based on units
                 vm.getWeather(lat.toString(), long.toString())
+
+            } catch (e: Exception) {
+                println(e)
             }
         }
     }
