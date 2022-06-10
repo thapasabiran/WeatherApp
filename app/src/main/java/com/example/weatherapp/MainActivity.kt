@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
     }
 
     //Checks for valid location input and updates pref file and initializes roomDB
