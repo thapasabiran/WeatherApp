@@ -47,7 +47,7 @@ class WeatherRepositoryTest {
 
         runBlocking {
 
-            Mockito.`when`(inter.getWeather("",""))
+            Mockito.`when`(inter.getWeather("","", ""))
                 .thenReturn(Response.success(fakeList))
 
 
