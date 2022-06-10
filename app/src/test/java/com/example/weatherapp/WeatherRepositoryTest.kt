@@ -2,6 +2,7 @@ package com.example.weatherapp
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import androidx.test.core.app.ApplicationProvider
 import com.example.weatherapp.api.RetroApiInterface
 import com.example.weatherapp.api.WeatherRepository
 import com.example.weatherapp.database.DailyWeather
@@ -18,14 +19,15 @@ import org.junit.runner.manipulation.Ordering
 import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.MockitoAnnotations
+import org.robolectric.RobolectricTestRunner
 import retrofit2.Response
 import java.util.*
 
 
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class WeatherRepositoryTest {
 
-    lateinit var repo: WeatherRepository
 
     @Mock
     lateinit var dao: WeatherDao
@@ -34,31 +36,33 @@ class WeatherRepositoryTest {
     @Mock
     lateinit var context : Context
 
+    lateinit var repo: WeatherRepository
+
     @Before()
     fun setUp(){
+        MockitoAnnotations.openMocks(this)
+
+        context = ApplicationProvider.getApplicationContext<Context>()
+
         repo = WeatherRepository(inter,context)
 
 
     }
     @Test
-    suspend fun getWeatherTest(){
+    fun getWeatherTest(){
         var fakeList =""
 
 
         runBlocking {
 
-            Mockito.`when`(inter.getWeather("","", ""))
+            Mockito.`when`(repo.getWeather("",""))
                 .thenReturn(Response.success(fakeList))
 
 
-            var result = repo.getWeather("","")
-            Assert.assertEquals(fakeList, result.body())
+            var result = repo.getWeather("","").body()
+            Assert.assertEquals(fakeList, result)
         }
 
-
-    }
-    @Test
-    fun `given repository when calling Weatherlist then list is empty and assert its empty`() {
 
     }
 
