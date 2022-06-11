@@ -44,5 +44,10 @@ class FrontPageActivity : AppCompatActivity() {
             forecastIntent.putExtra("weatherCondition", currentWeather.long_description)
             startActivity(forecastIntent)
         }
+
+        binding.weatAlertButton.setOnClickListener {
+            var alertIntent = Intent(this, WarningActivity::class.java)
+            startActivity(alertIntent)
+        }
     }
 }

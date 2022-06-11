@@ -7,19 +7,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weatherapp.database.CurrentWeather
-import com.example.weatherapp.database.DailyWeather
-import com.example.weatherapp.database.HourlyWeather
-import com.example.weatherapp.database.JsonDbHelper
+import com.example.weatherapp.database.*
 import io.reactivex.rxjava3.core.Observable
 import kotlinx.coroutines.*
 import java.util.*
 
 class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
     var currentWeather = MutableLiveData<CurrentWeather>()
+    var alertList: LiveData<List<Alert>>? = MutableLiveData()
     private var dailyWeather: LiveData<List<DailyWeather>>? = MutableLiveData()
     private var hourlyWeather: LiveData<List<HourlyWeather>>? = MutableLiveData()
     private var currentWeatherSingle: LiveData<CurrentWeather>? = MutableLiveData()
+    init {
+        getAlerts()
+    }
     var job : Job? = null
     fun getWeather(latitude : String, longitude : String) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -44,6 +45,10 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
             dailyWeather = repo.getDailyWeather()
         }
         return dailyWeather
+    }
+
+    fun getAlerts() = viewModelScope.launch {
+        alertList = repo.getAlerts()
     }
 
     fun getHourlyWeather(): LiveData<List<HourlyWeather>>? {
