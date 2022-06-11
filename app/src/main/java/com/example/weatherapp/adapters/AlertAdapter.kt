@@ -20,7 +20,8 @@ class AlertAdapter(private val alertList: List<Alert>): RecyclerView.Adapter<Ale
         val alert = alertList[position]
         holder.title.text = alert.short_description
         holder.description.text = alert.long_description
-        holder.date.text = Util.timestampToDateFull(alert.start_time)
+        holder.date.text = Util.timestampToDateFull(alert.start_time) +
+                " - " + Util.timestampToDateFull(alert.end_time)
     }
 
     override fun getItemCount(): Int {
