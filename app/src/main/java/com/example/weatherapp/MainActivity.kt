@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
             try {
                 address = vm.searchLocation(this, location).await()
             } catch (e: IOException) {
+                e.printStackTrace()
                 address = null
             }
         }

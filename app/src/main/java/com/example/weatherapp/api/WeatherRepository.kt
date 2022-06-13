@@ -18,7 +18,7 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
-        inter.getWeather(latitude, longitude, pref.getString("units","standard")!!)
+        inter.getWeather(latitude, longitude, pref.getString("units","metric")!!)
 
 
     //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels

@@ -93,6 +93,7 @@ class AppPreferencesActivity : AppCompatActivity() {
         binding.switchCelcius.setOnCheckedChangeListener { button, isChecked ->
             with(preferences.edit()){
                 putString("tempUnits", if (isChecked) "C" else "F")
+                putString("units", if (isChecked) "metric" else "imperial")
                 changedSettings = true
                 apply()
             }

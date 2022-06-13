@@ -62,9 +62,22 @@ class ForecastActivity : AppCompatActivity() {
         vm.getDailyWeather()?.observe(this) {
             dailyWeatherList = it as ArrayList<DailyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
             //To get min and max temp of today weather we are using the first element in list that contains today weather data
-            binding.forecastLowTextView.text = String.format( "Low: %.1f° %s",dailyWeatherList[0].temp_min, preferences.getString("tempUnits", "C"))
-            binding.forecastHighTextView.text = String.format( "High: %.1f° %s",dailyWeatherList[0].temp_max, preferences.getString("tempUnits", "C"))
-            dailyWeatherAdapter.setDailyWeather(dailyWeatherList, preferences.getString("tempUnits", "C")!!)
+            if(!dailyWeatherList.isEmpty()) {
+                binding.forecastLowTextView.text = String.format(
+                    "Low: %.1f° %s",
+                    dailyWeatherList[0].temp_min,
+                    preferences.getString("tempUnits", "C")
+                )
+                binding.forecastHighTextView.text = String.format(
+                    "High: %.1f° %s",
+                    dailyWeatherList[0].temp_max,
+                    preferences.getString("tempUnits", "C")
+                )
+                dailyWeatherAdapter.setDailyWeather(
+                    dailyWeatherList,
+                    preferences.getString("tempUnits", "C")!!
+                )
+            }
         }
 
         vm.getCurrentWeatherSingle()?.observe(this) {
