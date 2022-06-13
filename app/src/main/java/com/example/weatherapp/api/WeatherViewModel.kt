@@ -26,6 +26,7 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         CoroutineScope(Dispatchers.IO).launch {
             var res = repo.getWeather(latitude,longitude)
             if(res.isSuccessful) {
+                println("inside WeatherViewModel.getWeather()")
                 println(res.body())
                 currentWeather.postValue(JsonDbHelper.toCurrentWeather(res.body()!!))
             }
@@ -87,7 +88,7 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         }
     }
 
-    suspend fun updateWeather(latitude: String, longitude: String) : Job {
+    fun updateWeather(latitude: String, longitude: String) : Job {
         return GlobalScope.launch(Dispatchers.IO) {
             repo.updateWeather(latitude,longitude)
         }

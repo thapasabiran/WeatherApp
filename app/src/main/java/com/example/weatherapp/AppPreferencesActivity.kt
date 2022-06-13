@@ -8,6 +8,8 @@ import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import com.example.weatherapp.databinding.ActivityAppPreferencesBinding
 
 class AppPreferencesActivity : AppCompatActivity() {
@@ -22,6 +24,9 @@ class AppPreferencesActivity : AppCompatActivity() {
     lateinit var currLocationText : String
     var use24h = false
     var useMetricUnits = false
+    var changedSettings = false
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +41,7 @@ class AppPreferencesActivity : AppCompatActivity() {
         //load settings and apply to controls in the xml
         currLocationText = preferences.getString("niceLocation", NO_LOC_TEXT)!!
         use24h = preferences.getBoolean("use24hourTime", false)
-        useMetricUnits = preferences.getBoolean("useMetricUnits", false)
+        useMetricUnits = preferences.getString("tempUnits", "C") == "C"
 
         binding.switch24h.isChecked = use24h
         binding.switchCelcius.isChecked = useMetricUnits
@@ -44,6 +49,7 @@ class AppPreferencesActivity : AppCompatActivity() {
         binding.locationTextinputlayout.boxBackgroundColor = okColor
 
         println(preferences.getString("niceLocation", "no location"))
+
 
         binding.applyButton.setOnClickListener {
             val searchTerm = binding.zipEditText.text.toString()
@@ -72,33 +78,57 @@ class AppPreferencesActivity : AppCompatActivity() {
                     }
                 }
             }
-
+            changedSettings = true
             binding.currentLocationLabel.setText(loc)
         }
 
         binding.switch24h.setOnCheckedChangeListener { button, isChecked ->
             with(preferences.edit()){
                 putBoolean("use24hourTime", isChecked)
+                changedSettings = true
                 apply()
             }
         }
 
         binding.switchCelcius.setOnCheckedChangeListener { button, isChecked ->
             with(preferences.edit()){
-                putBoolean("useMetricUnits", isChecked)
+                putString("tempUnits", if (isChecked) "C" else "F")
+                changedSettings = true
                 apply()
             }
         }
 
         binding.mapSearch.setOnClickListener {
+
             val mapIntent = Intent(this, MapActivity::class.java)
-            startActivity(mapIntent)
+            //startActivity(mapIntent)
+            startForResult.launch(mapIntent)
         }
 
         binding.backButtonSettings.setOnClickListener {
-            val forecastIntent = Intent(this, ForecastActivity::class.java)
-            startActivity(forecastIntent)
+            //set the result so that the calling activity could call vm.updateWeather() if necessary
+            if(changedSettings){
+                setResult(RESULT_OK)
+            } else {
+                setResult(RESULT_CANCELED)
+            }
+            finish()
         }
 
+    }
+
+    //this handles the result from the map activity
+    val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            val intent = result.data
+            currLocationText = intent!!.getStringExtra("niceLocation")!!
+            val long = intent.getStringExtra("longitude")
+            val lat = intent.getStringExtra("latitude")
+            binding.currentLocationLabel.setText(currLocationText)
+            binding.zipEditText.setText(currLocationText)
+            changedSettings = true
+            Toast.makeText(this, "Successfully updated location", Toast.LENGTH_SHORT).show()
+        }
     }
 }

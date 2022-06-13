@@ -55,15 +55,13 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
         binding.backButtonMap.setOnClickListener {
-            val appPreferenceIntent = Intent(this, AppPreferencesActivity::class.java)
-            startActivity(appPreferenceIntent)
             finish()
         }
         binding.selectLocation.setOnClickListener {
             if (location == "") {
                 Toast.makeText(this, "Please select a valid location", Toast.LENGTH_SHORT).show()
             } else {
-                GlobalScope.launch(Dispatchers.Main) {
+                GlobalScope.launch(Dispatchers.IO) {
                     setLocation()
                 }
             }
@@ -73,14 +71,17 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     suspend fun setLocation() {
         vm.updateWeather(lat.toString(), long.toString()).join()
         with(pref.edit()) {
-            putString("location", location)
+            putString("niceLocation", location)
             putString("latitude", lat.toString())
             putString("longitude", long.toString())
             apply()
         }
-        Toast.makeText(this, "Successfully updated location", Toast.LENGTH_SHORT).show()
-        val appPreferenceIntent = Intent(this, AppPreferencesActivity::class.java)
-        startActivity(appPreferenceIntent)
+        //Toast.makeText(this, "Successfully updated location", Toast.LENGTH_SHORT).show()
+        setResult(RESULT_OK, intent)
+        intent.putExtra("niceLocation", location)
+        intent.putExtra("latitude", lat.toString())
+        intent.putExtra("longitude", long.toString())
+        finish()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -104,7 +105,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                 vm.getWeather(lat.toString(), long.toString())
 
             } catch (e: Exception) {
-                println(e)
+                e.printStackTrace()
             }
         }
     }

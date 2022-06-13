@@ -2,8 +2,12 @@ package com.example.weatherapp
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.AbsListView
+import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -29,15 +33,16 @@ class ForecastActivity : AppCompatActivity() {
     var totalItems = 0
     var scrollOutItems = 0
     var offSet = 0
+    lateinit var preferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityForecastBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.forecastWetConTextView.text = intent.getStringExtra("weatherCondition")
-        binding.forecastTemTextView.text = intent.getStringExtra("temp")
-        binding.forecastLocTextView.text = intent.getStringExtra("location")
+        preferences = getSharedPreferences("prefs", MODE_PRIVATE)
+
+        binding.forecastLocTextView.text = preferences.getString("niceLocation", "No location set")
 
         val api = RetroApiInterface.create()
         val repo = WeatherRepository(api, this)
@@ -57,16 +62,31 @@ class ForecastActivity : AppCompatActivity() {
         vm.getDailyWeather()?.observe(this) {
             dailyWeatherList = it as ArrayList<DailyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
             //To get min and max temp of today weather we are using the first element in list that contains today weather data
-            binding.forecastLowTextView.text = dailyWeatherList[0].temp_min.toString()
-            binding.forecastHighTextView.text = dailyWeatherList[0].temp_max.toString()
-            dailyWeatherAdapter.setDailyWeather(dailyWeatherList)
+            binding.forecastLowTextView.text = String.format( "Low: %.1f° %s",dailyWeatherList[0].temp_min, preferences.getString("tempUnits", "C"))
+            binding.forecastHighTextView.text = String.format( "High: %.1f° %s",dailyWeatherList[0].temp_max, preferences.getString("tempUnits", "C"))
+            dailyWeatherAdapter.setDailyWeather(dailyWeatherList, preferences.getString("tempUnits", "C")!!)
+        }
+
+        vm.getCurrentWeatherSingle()?.observe(this) {
+            var temp = ""
+            var condition = ""
+            if(it == null){
+                temp = "N/A"
+                condition = "N/A"
+            } else {
+                temp = String.format( "%.1f° %s",it.temp, preferences.getString("tempUnits", "C"))
+                condition = it.short_description
+            }
+            binding.forecastWetConTextView.text = condition
+            binding.forecastTemTextView.text = temp
+
         }
 
         //Get the first 12 hourly weather report and after that only load more if user start scrolling for more data
         hourlyWeatherList = ArrayList<HourlyWeather>()
         vm.getHourlyWeather(12, offSet)?.observe(this) {
             hourlyWeatherList = it as ArrayList<HourlyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
-            hourlyWeatherAdapter.setHourlyWeather(hourlyWeatherList)
+            hourlyWeatherAdapter.setHourlyWeather(hourlyWeatherList, preferences.getBoolean("use24hourTime", false), preferences.getString("tempUnits", "C")!!)
         }
 
         var hourlyRecyclerView = binding.hourlyRecyclerView
@@ -77,11 +97,12 @@ class ForecastActivity : AppCompatActivity() {
 
         binding.settingsButton.setOnClickListener {
             val appPreferenceIntent = Intent(this, AppPreferencesActivity::class.java)
-            startActivity(appPreferenceIntent)
+            startForResult.launch(appPreferenceIntent)
         }
         binding.backButton.setOnClickListener {
-            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
-            startActivity(frontPageIntent)
+            //finish the activity so that it's not getting stuck inside the stack
+            //this avoids memory leaks
+            finish()
         }
         //if user start scrolling for more data, get it from db based on offset
         hourlyRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
@@ -107,12 +128,21 @@ class ForecastActivity : AppCompatActivity() {
                     loadingDialog.startLoadingDialog()
                     vm.getHourlyWeather(12, offSet)?.observe(this@ForecastActivity) {
                         hourlyWeatherList.addAll(it as ArrayList<HourlyWeather>) /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
-                        hourlyWeatherAdapter.setHourlyWeather(hourlyWeatherList)
+                        hourlyWeatherAdapter.setHourlyWeather(hourlyWeatherList, preferences.getBoolean("use24hourTime", false), preferences.getString("tempUnits", "C")!!)
                         //dismiss loading dialog
                         loadingDialog.dismissDialog()
                     }
                 }
             }
         })
+    }
+
+    //if there are any changes in preferences, update the weather and set the location
+    val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
+        if (result.resultCode == RESULT_OK) {
+            vm.updateWeather(preferences.getString("latitude", "0")!!, preferences.getString("longitude", "0")!!)
+            binding.forecastLocTextView.setText(preferences.getString("niceLocation", "No location set"))
+        }
     }
 }

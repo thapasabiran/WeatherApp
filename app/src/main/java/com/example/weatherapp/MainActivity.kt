@@ -14,6 +14,7 @@ import com.example.weatherapp.databinding.ActivityMainBinding
 import java.util.*
 import android.content.Context
 import android.content.SharedPreferences
+import android.location.Address
 import android.location.Geocoder
 import android.text.method.TextKeyListener.clear
 import androidx.core.view.isVisible
@@ -24,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -36,14 +38,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
         //Comment this out if you want to skip the welcome page when there's already a stored pref
-        pref.edit().clear().commit()
+        //pref.edit().clear().commit()
 
-//        val frontPageIntent = Intent(this, SearchActivity::class.java)
-//        startActivity(frontPageIntent)
-        if(pref.getString("location","") != "") {
+        if(pref.getString("niceLocation","") != "") {
             val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
-            //finish()
+
+            finish()
         }
 
         val api = RetroApiInterface.create()
@@ -55,12 +56,16 @@ class MainActivity : AppCompatActivity() {
         vm = WeatherViewModel(repo)
 
         binding.welcomeContinueButton.setOnClickListener {
-            binding.welcomeContinueButton.isVisible = false
-            binding.loadingBar.isVisible = true
+            //binding.welcomeContinueButton.isVisible = false
+            binding.welcomeContinueButton.visibility = View.GONE
+            //binding.loadingUI.isVisible = true
+            binding.loadingUI.visibility = View.VISIBLE
             GlobalScope.launch(Dispatchers.Main) { //Use main thread for toast to work
                 initialize()
-                binding.welcomeContinueButton.isVisible = true
-                binding.loadingBar.isVisible = false
+                //binding.welcomeContinueButton.isVisible = true
+                binding.welcomeContinueButton.visibility = View.VISIBLE
+                //binding.loadingProgressBar.isVisible = false
+                binding.loadingUI.visibility = View.GONE
             }
         }
 
@@ -71,24 +76,38 @@ class MainActivity : AppCompatActivity() {
     //with all weather data for the given location
     suspend fun initialize() {
         val location = binding.welcomeLocationTextEdit.text.toString()
-        var address = vm.searchLocation(this, location).await()
+        var address : Address? = null
+        if(!location.isEmpty()) {
+            //Geocoder can crash if ran with empty parameters
+            try {
+                address = vm.searchLocation(this, location).await()
+            } catch (e: IOException) {
+                address = null
+            }
+        }
         if (location != "" && address != null) {
+            var address = vm.searchLocation(this, location).await()
             val lat = address!!.latitude.toString()
             val long = address!!.longitude.toString()
             //make sure pref is set before calling updateWeather
             with(pref.edit()) {
-                putString("location", binding.welcomeLocationTextEdit.text.toString())
+                //we'll use niceLocation, which is a more user-friendly name - comes from address, not user input
+                //putString("location", binding.welcomeLocationTextEdit.text.toString())
                 putString("latitude", lat)
                 putString("longitude", long)
                 putString("country", address.countryName)
                 putString("tempUnits", binding.spinner.selectedItem.toString())
                 putString("units",Util.getDefaultUnits(binding.spinner.selectedItem.toString()))
+                putString("niceLocation", address.getAddressLine(0))
                 apply()
             }
-            vm.updateWeather(lat, long).join()
+            //The weather will be updated inside the front page activity, since this part will be skipped if
+            //preferences aren't empty.
+            //vm.updateWeather(lat, long).join()
             val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
-            //finish()
+            //ternminate the activity
+            finish()
         } else {
             Toast.makeText(this, "Please enter a valid location", Toast.LENGTH_SHORT).show()
             delay(300) //stops user from spam clicking button

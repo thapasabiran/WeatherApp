@@ -11,7 +11,6 @@ import com.example.weatherapp.adapters.AlertAdapter
 import com.example.weatherapp.api.RetroApiInterface
 import com.example.weatherapp.api.WeatherRepository
 import com.example.weatherapp.api.WeatherViewModel
-import com.example.weatherapp.databinding.ActivityForecastBinding
 import com.example.weatherapp.databinding.ActivityWarningBinding
 
 class WarningActivity : AppCompatActivity() {
@@ -43,8 +42,7 @@ class WarningActivity : AppCompatActivity() {
         }
 
         binding.backButton.setOnClickListener {
-            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
-            startActivity(frontPageIntent)
+            //no need to start a new activity if front page activity is still in the stack
             finish()
         }
     }

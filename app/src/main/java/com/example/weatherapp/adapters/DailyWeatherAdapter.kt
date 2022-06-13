@@ -10,6 +10,7 @@ import com.example.weatherapp.databinding.DailyWeatherLayoutBinding
 import com.squareup.picasso.Picasso
 
 class DailyWeatherAdapter(private var dailyWeatherList: List<DailyWeather>): RecyclerView.Adapter<DailyWeatherViewHolder>() {
+    var units = ""
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyWeatherViewHolder {
         var binding: DailyWeatherLayoutBinding = DailyWeatherLayoutBinding.inflate(LayoutInflater.from(parent.context))
         return DailyWeatherViewHolder(binding)
@@ -20,15 +21,16 @@ class DailyWeatherAdapter(private var dailyWeatherList: List<DailyWeather>): Rec
         holder.day.text = timestampToDayOfWeek(dailyWeatherItemVM.dt)
         //Load the icon from open weather api based on icon
         Picasso.get().load("https://openweathermap.org/img/wn/" + dailyWeatherItemVM.icon + "@4x.png").into(holder.icon)
-        holder.tempLow.text = dailyWeatherItemVM.temp_min.toString()
-        holder.tempHigh.text = dailyWeatherItemVM.temp_max.toString()
+        holder.tempLow.text = String.format("L: %.1f° %s" ,dailyWeatherItemVM.temp_min, units)
+        holder.tempHigh.text = String.format("H: %.1f° %s" ,dailyWeatherItemVM.temp_max, units)
     }
 
     override fun getItemCount(): Int {
         return dailyWeatherList.size
     }
 
-    fun setDailyWeather(dailyWeatherList: List<DailyWeather>) {
+    fun setDailyWeather(dailyWeatherList: List<DailyWeather>, degreeUnits: String) {
+        units = degreeUnits
         this.dailyWeatherList = dailyWeatherList
         notifyDataSetChanged()
     }
