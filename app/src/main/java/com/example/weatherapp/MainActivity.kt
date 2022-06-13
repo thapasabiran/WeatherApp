@@ -19,6 +19,8 @@ import android.location.Geocoder
 import android.text.method.TextKeyListener.clear
 import androidx.core.view.isVisible
 import com.example.weatherapp.database.Util
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers

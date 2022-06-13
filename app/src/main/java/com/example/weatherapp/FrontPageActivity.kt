@@ -9,6 +9,8 @@ import com.example.weatherapp.api.WeatherRepository
 import com.example.weatherapp.api.WeatherViewModel
 import com.example.weatherapp.database.CurrentWeather
 import com.example.weatherapp.databinding.ActivityFrontPageBinding
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 class FrontPageActivity : AppCompatActivity() {
@@ -19,6 +21,8 @@ class FrontPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityFrontPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        var crashlytics = Firebase.crashlytics
+        crashlytics.setUserId("user1")
 
         val api = RetroApiInterface.create()
         val repo = WeatherRepository(api, this)
