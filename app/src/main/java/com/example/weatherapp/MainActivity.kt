@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
@@ -85,32 +86,40 @@ class MainActivity : AppCompatActivity() {
                 address = vm.searchLocation(this, location).await()
             } catch (e: IOException) {
                 e.printStackTrace()
+                Timber.log(6, e)
                 address = null
             }
         }
         if (location != "" && address != null) {
-            var address = vm.searchLocation(this, location).await()
-            val lat = address!!.latitude.toString()
-            val long = address!!.longitude.toString()
-            //make sure pref is set before calling updateWeather
-            with(pref.edit()) {
-                //we'll use niceLocation, which is a more user-friendly name - comes from address, not user input
-                //putString("location", binding.welcomeLocationTextEdit.text.toString())
-                putString("latitude", lat)
-                putString("longitude", long)
-                putString("country", address.countryName)
-                putString("tempUnits", binding.spinner.selectedItem.toString())
-                putString("units",Util.getDefaultUnits(binding.spinner.selectedItem.toString()))
-                putString("niceLocation", address.getAddressLine(0))
-                apply()
+            try {
+                var address = vm.searchLocation(this, location).await()
+                val lat = address!!.latitude.toString()
+                val long = address!!.longitude.toString()
+                //make sure pref is set before calling updateWeather
+                with(pref.edit()) {
+                    //we'll use niceLocation, which is a more user-friendly name - comes from address, not user input
+                    //putString("location", binding.welcomeLocationTextEdit.text.toString())
+                    putString("latitude", lat)
+                    putString("longitude", long)
+                    putString("country", address.countryName)
+                    putString("tempUnits", binding.spinner.selectedItem.toString())
+                    putString(
+                        "units",
+                        Util.getDefaultUnits(binding.spinner.selectedItem.toString())
+                    )
+                    putString("niceLocation", address.getAddressLine(0))
+                    apply()
+                }
+                //The weather will be updated inside the front page activity, since this part will be skipped if
+                //preferences aren't empty.
+                //vm.updateWeather(lat, long).join()
+                val frontPageIntent = Intent(this, FrontPageActivity::class.java)
+                startActivity(frontPageIntent)
+                //ternminate the activity
+                finish()
+            } catch (ex: Exception) {
+                Timber.log(6, ex)
             }
-            //The weather will be updated inside the front page activity, since this part will be skipped if
-            //preferences aren't empty.
-            //vm.updateWeather(lat, long).join()
-            val frontPageIntent = Intent(this, FrontPageActivity::class.java)
-            startActivity(frontPageIntent)
-            //ternminate the activity
-            finish()
         } else {
             Toast.makeText(this, "Please enter a valid location", Toast.LENGTH_SHORT).show()
             delay(300) //stops user from spam clicking button
