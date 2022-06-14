@@ -79,7 +79,7 @@ class WeatherViewModelTest {
         var liveList = MutableLiveData<List<DailyWeather>>()
         liveList.postValue(fakeList)
 
-        Mockito.`when`(vm.getDailyWeather())
+        Mockito.`when`(repo.getDailyWeather())
             .thenReturn(liveList)
 
         val result = vm.getDailyWeather()
@@ -98,7 +98,7 @@ class WeatherViewModelTest {
         liveList.postValue(fakeList)
 
 
-            Mockito.`when`(vm.getHourlyWeather()).thenReturn(liveList)
+            Mockito.`when`(repo.getHourlyWeather()).thenReturn(liveList)
 
             val result = vm.getHourlyWeather()
 
@@ -115,7 +115,7 @@ class WeatherViewModelTest {
         var liveList = MutableLiveData<CurrentWeather>()
         liveList.postValue(fakeList)
 
-        Mockito.`when`(vm.getCurrentWeatherSingle())
+        Mockito.`when`(repo.getCurrentWeatherSingle())
             .thenReturn(liveList)
 
         val result = vm.getCurrentWeatherSingle()

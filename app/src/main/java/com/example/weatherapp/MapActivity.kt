@@ -21,6 +21,9 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -35,6 +38,7 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var repo: WeatherRepository
     lateinit var vm: WeatherViewModel
     lateinit var pref: SharedPreferences
+    lateinit var crashlytics : FirebaseCrashlytics
     var lat = 0.0
     var long = 0.0
     var location = ""
@@ -43,6 +47,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         binding = ActivityMapBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        crashlytics = Firebase.crashlytics
+        crashlytics.setUserId("User1")
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
         pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
@@ -101,11 +107,10 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
                     marker!!.remove()
                 marker = gMap.addMarker(MarkerOptions().position(LatLng(lat, long)))
 
-                //Added units so that we can make api call based on units
                 vm.getWeather(lat.toString(), long.toString())
 
             } catch (e: Exception) {
-                e.printStackTrace()
+                crashlytics.recordException(e)
             }
         }
     }
