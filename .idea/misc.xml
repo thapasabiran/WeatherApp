@@ -35,10 +35,14 @@
         <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_search.xml" value="0.15260416666666668" />
         <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/activity_warning.xml" value="0.2" />
         <entry key="..\:/Users/xuann/AndroidStudioProjects/WeatherApp/app/src/main/res/layout/warning_card_layout.xml" value="0.2" />
-        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_forecast.xml" value="0.2734375" />
-        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.35555555555555557" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_app_preferences.xml" value="0.22916666666666666" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_forecast.xml" value="0.5" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_front_page.xml" value="0.36102564102564105" />
         <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_main.xml" value="0.35555555555555557" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/activity_warning.xml" value="0.36666666666666664" />
         <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/daily_weather_layout.xml" value="0.75" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/hourly_weather_layout.xml" value="0.7346251053074979" />
+        <entry key="..\:/prog/Android/WeatherApp/app/src/main/res/layout/warning_card_layout.xml" value="0.36666666666666664" />
       </map>
     </option>
   </component>
