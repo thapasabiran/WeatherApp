@@ -162,29 +162,38 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/currentWeatherCardView">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:text="Hourly forecast"
-                        android:textColor="@color/white"
-                        android:textSize="15sp" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
 
-                    <com.google.android.material.divider.MaterialDivider
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_marginTop="40dp"
-                        android:layout_marginEnd="15dp"
-                        android:background="@color/white" />
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text="Hourly forecast"
+                            android:textColor="@color/white"
+                            android:textSize="15sp" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/hourlyRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="227dp"
-                        app:layout_constraintCircleRadius="20dp"
-                        tools:listitem="@layout/hourly_weather_layout" />
+                        <com.google.android.material.divider.MaterialDivider
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="15dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="15dp"
+                            android:background="@color/white" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/hourlyRecyclerView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintCircleRadius="20dp"
+                            tools:listitem="@layout/hourly_weather_layout" />
+
+                    </LinearLayout>
+
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
