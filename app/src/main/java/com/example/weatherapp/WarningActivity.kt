@@ -12,6 +12,7 @@ import com.example.weatherapp.api.RetroApiInterface
 import com.example.weatherapp.api.WeatherRepository
 import com.example.weatherapp.api.WeatherViewModel
 import com.example.weatherapp.databinding.ActivityWarningBinding
+import timber.log.Timber
 
 class WarningActivity : AppCompatActivity() {
     lateinit var vm : WeatherViewModel
@@ -25,20 +26,23 @@ class WarningActivity : AppCompatActivity() {
         val repo = WeatherRepository(api, this)
         vm = WeatherViewModel(repo)
 
-
-        vm.alertList?.observe(this) {
-            val recyclerView: RecyclerView = binding.recyclerView
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            var alertList = it as ArrayList
-            if (alertList.isEmpty()) {
-                binding.recyclerView.visibility = View.GONE
-                binding.noAlerts.visibility = View.VISIBLE
-            } else {
-                binding.recyclerView.visibility = View.VISIBLE
-                binding.noAlerts.visibility = View.GONE
-                var adapter = AlertAdapter(alertList)
-                recyclerView.adapter = adapter
+        try {
+            vm.alertList?.observe(this) {
+                val recyclerView: RecyclerView = binding.recyclerView
+                recyclerView.layoutManager = LinearLayoutManager(this)
+                var alertList = it as ArrayList
+                if (alertList.isEmpty()) {
+                    binding.recyclerView.visibility = View.GONE
+                    binding.noAlerts.visibility = View.VISIBLE
+                } else {
+                    binding.recyclerView.visibility = View.VISIBLE
+                    binding.noAlerts.visibility = View.GONE
+                    var adapter = AlertAdapter(alertList)
+                    recyclerView.adapter = adapter
+                }
             }
+        } catch (ex: Exception) {
+            Timber.log(6, ex)
         }
 
         binding.backButton.setOnClickListener {
