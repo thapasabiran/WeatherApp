@@ -14,15 +14,15 @@
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/clouds_bg" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:itemCount="1"
-        android:layout_weight="1"
-        tools:listitem="@layout/warning_card_layout"
         android:layout_margin="10dp"
-        />
+        android:layout_weight="1"
+        tools:itemCount="3"
+        tools:listitem="@layout/warning_card_layout" />
     <LinearLayout
         android:id="@+id/noAlerts"
         android:layout_width="match_parent"
