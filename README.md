@@ -1,4 +1,4 @@
-# LibraryBookManagement
+# Weather App
 
 ## Technologies Used
 * Android Studio
