@@ -1,6 +1,7 @@
 package com.example.weatherapp.api
 
 
+import com.example.weatherapp.BuildConfig
 import com.example.weatherapp.database.CurrentWeather
 import org.json.JSONObject
 import retrofit2.Response
@@ -13,11 +14,9 @@ import retrofit2.http.Headers
 import retrofit2.http.Query
 
 interface RetroApiInterface {
-    @Headers("appid: b25aeba7bea92da33d3f554d3b4c3501")
-
     @GET("/data/2.5/onecall?")
-    suspend fun getWeather(@Query("lat") latitude : String, @Query("lon") longitude : String,
-                           @Query("units") units: String): Response<String>
+    suspend fun getWeather(@Query("lat") latitude : String, @Query("lon") longitude : String, @Query("units") units: String,
+                           @Query("appid") apikey : String = "b25aeba7bea92da33d3f554d3b4c3501"): Response<String>
 
     companion object {
         val BASE_URL = "https://api.openweathermap.org"

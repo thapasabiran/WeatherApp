@@ -28,8 +28,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import timber.log.Timber
+//import java.lang.Exception
 import java.util.*
+import kotlin.Exception
 
 
 class MapActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -55,10 +57,15 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         repo = WeatherRepository(RetroApiInterface.create(),this)
         vm = WeatherViewModel(repo)
-        vm.currentWeather.observe(this) {
-            binding.locationText.text = location
-            binding.temperatureText.text = it.temp.toString() +"°${pref.getString("tempUnits","C")}"
+        try {
+            vm.currentWeather.observe(this) {
+                binding.locationText.text = location
+                binding.temperatureText.text =
+                    it.temp.toString() + "°${pref.getString("tempUnits", "C")}"
 
+            }
+        } catch (ex: Exception) {
+            Timber.log(6, ex)
         }
         binding.backButtonMap.setOnClickListener {
             finish()
@@ -75,19 +82,23 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
     suspend fun setLocation() {
-        vm.updateWeather(lat.toString(), long.toString()).join()
-        with(pref.edit()) {
-            putString("niceLocation", location)
-            putString("latitude", lat.toString())
-            putString("longitude", long.toString())
-            apply()
+        try {
+            vm.updateWeather(lat.toString(), long.toString()).join()
+            with(pref.edit()) {
+                putString("niceLocation", location)
+                putString("latitude", lat.toString())
+                putString("longitude", long.toString())
+                apply()
+            }
+            //Toast.makeText(this, "Successfully updated location", Toast.LENGTH_SHORT).show()
+            setResult(RESULT_OK, intent)
+            intent.putExtra("niceLocation", location)
+            intent.putExtra("latitude", lat.toString())
+            intent.putExtra("longitude", long.toString())
+            finish()
+        } catch (ex: Exception) {
+            Timber.log(6, ex)
         }
-        //Toast.makeText(this, "Successfully updated location", Toast.LENGTH_SHORT).show()
-        setResult(RESULT_OK, intent)
-        intent.putExtra("niceLocation", location)
-        intent.putExtra("latitude", lat.toString())
-        intent.putExtra("longitude", long.toString())
-        finish()
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -111,6 +122,8 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
             } catch (e: Exception) {
                 crashlytics.recordException(e)
+                e.printStackTrace()
+                Timber.log(6, e)
             }
         }
     }

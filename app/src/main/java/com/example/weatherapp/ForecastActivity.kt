@@ -19,6 +19,9 @@ import com.example.weatherapp.api.WeatherViewModel
 import com.example.weatherapp.database.DailyWeather
 import com.example.weatherapp.database.HourlyWeather
 import com.example.weatherapp.databinding.ActivityForecastBinding
+import com.google.firebase.crashlytics.ktx.crashlytics
+import com.google.firebase.ktx.Firebase
+import timber.log.Timber
 
 class ForecastActivity : AppCompatActivity() {
     lateinit var binding: ActivityForecastBinding
@@ -59,47 +62,67 @@ class ForecastActivity : AppCompatActivity() {
         //start loading dialog
         loadingDialog.startLoadingDialog()
         //get the daily weather and bind it to the recycler view adapter
-        vm.getDailyWeather()?.observe(this) {
-            dailyWeatherList = it as ArrayList<DailyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
-            //To get min and max temp of today weather we are using the first element in list that contains today weather data
-            if(!dailyWeatherList.isEmpty()) {
-                binding.forecastLowTextView.text = String.format(
-                    "Low: %.1f° %s",
-                    dailyWeatherList[0].temp_min,
-                    preferences.getString("tempUnits", "C")
-                )
-                binding.forecastHighTextView.text = String.format(
-                    "High: %.1f° %s",
-                    dailyWeatherList[0].temp_max,
-                    preferences.getString("tempUnits", "C")
-                )
-                dailyWeatherAdapter.setDailyWeather(
-                    dailyWeatherList,
-                    preferences.getString("tempUnits", "C")!!
-                )
+
+        try {
+            vm.getDailyWeather()?.observe(this) {
+                dailyWeatherList =
+                    it as ArrayList<DailyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
+                //To get min and max temp of today weather we are using the first element in list that contains today weather data
+                if (!dailyWeatherList.isEmpty()) {
+                    binding.forecastLowTextView.text = String.format(
+                        "Low: %.1f° %s",
+                        dailyWeatherList[0].temp_min,
+                        preferences.getString("tempUnits", "C")
+                    )
+                    binding.forecastHighTextView.text = String.format(
+                        "High: %.1f° %s",
+                        dailyWeatherList[0].temp_max,
+                        preferences.getString("tempUnits", "C")
+                    )
+                    dailyWeatherAdapter.setDailyWeather(
+                        dailyWeatherList,
+                        preferences.getString("tempUnits", "C")!!
+                    )
+                }
             }
+        } catch (ex: Exception) {
+            Timber.log(6, ex)
         }
 
-        vm.getCurrentWeatherSingle()?.observe(this) {
-            var temp = ""
-            var condition = ""
-            if(it == null){
-                temp = "N/A"
-                condition = "N/A"
-            } else {
-                temp = String.format( "%.1f° %s",it.temp, preferences.getString("tempUnits", "C"))
-                condition = it.short_description
-            }
-            binding.forecastWetConTextView.text = condition
-            binding.forecastTemTextView.text = temp
+        try {
+            vm.getCurrentWeatherSingle()?.observe(this) {
+                var temp = ""
+                var condition = ""
+                if (it == null) {
+                    temp = "N/A"
+                    condition = "N/A"
+                } else {
+                    temp =
+                        String.format("%.1f° %s", it.temp, preferences.getString("tempUnits", "C"))
+                    condition = it.short_description
+                }
+                binding.forecastWetConTextView.text = condition
+                binding.forecastTemTextView.text = temp
 
+            }
+        } catch (ex: Exception) {
+            Timber.log(6, ex)
         }
 
         //Get the first 12 hourly weather report and after that only load more if user start scrolling for more data
         hourlyWeatherList = ArrayList<HourlyWeather>()
-        vm.getHourlyWeather(12, offSet)?.observe(this) {
-            hourlyWeatherList = it as ArrayList<HourlyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
-            hourlyWeatherAdapter.setHourlyWeather(hourlyWeatherList, preferences.getBoolean("use24hourTime", false), preferences.getString("tempUnits", "C")!!)
+        try {
+            vm.getHourlyWeather(12, offSet)?.observe(this) {
+                hourlyWeatherList =
+                    it as ArrayList<HourlyWeather> /* = java.util.ArrayList<com.example.weatherapp.database.DailyWeather> */
+                hourlyWeatherAdapter.setHourlyWeather(
+                    hourlyWeatherList,
+                    preferences.getBoolean("use24hourTime", false),
+                    preferences.getString("tempUnits", "C")!!
+                )
+            }
+        } catch (ex: Exception) {
+            Timber.log(6, ex)
         }
 
         var hourlyRecyclerView = binding.hourlyRecyclerView
@@ -154,8 +177,20 @@ class ForecastActivity : AppCompatActivity() {
     val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             result: ActivityResult ->
         if (result.resultCode == RESULT_OK) {
-            vm.updateWeather(preferences.getString("latitude", "0")!!, preferences.getString("longitude", "0")!!)
-            binding.forecastLocTextView.setText(preferences.getString("niceLocation", "No location set"))
+            try {
+                vm.updateWeather(
+                    preferences.getString("latitude", "0")!!,
+                    preferences.getString("longitude", "0")!!
+                )
+                binding.forecastLocTextView.setText(
+                    preferences.getString(
+                        "niceLocation",
+                        "No location set"
+                    )
+                )
+            } catch (ex: Exception) {
+                Timber.log(6, ex)
+            }
         }
     }
 }

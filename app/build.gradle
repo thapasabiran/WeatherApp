@@ -111,4 +111,6 @@ dependencies {
     //Roboelecric runner to resolve Kotlin-specific issues with JUnit, such as '_Impl.java' issue
     testImplementation 'org.robolectric:robolectric:4.7.3'
 
+    //For Logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
 }
