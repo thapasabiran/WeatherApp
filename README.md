@@ -10,6 +10,7 @@
 * Recycler View
 * Timber
 * Firebase Crashlytics
+* JUnit4 and Mockito
 
 ## Features
 
