@@ -33,7 +33,6 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         }
     }
 
-    //ToDo: Look at this later. Dependency had been used for now to make it observable
     fun getCurrentWeatherSingle(): LiveData<CurrentWeather>? {
         viewModelScope.launch {
             currentWeatherSingle = repo.getCurrentWeatherSingle()
