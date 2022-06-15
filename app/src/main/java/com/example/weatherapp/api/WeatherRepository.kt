@@ -15,11 +15,14 @@ class WeatherRepository(val inter : RetroApiInterface, context: Context) {
 
     val db : WeatherDao? = AppDatabase.getInstance(context)?.weatherDao()
     val pref = context.getSharedPreferences("prefs", Context.MODE_PRIVATE)
+    val autoAPI = AutocompleteAPI.create()
 
     //retrofit part - used to update the database, don't use in viewmodel
     suspend fun getWeather(latitude : String, longitude : String) =
         inter.getWeather(latitude, longitude, pref.getString("units","metric")!!)
 
+    suspend fun getLocation(location : String) =
+        autoAPI.getLocation(location)
 
     //database part - use getCurrentWeather(), getHourlyWeather(), and getDailyWeather() in the viewmodels
 

@@ -137,6 +137,18 @@ class JsonDbHelper {
             return list
         }
 
+        fun toCityList(json: String): List<String> {
+            var jObject = JSONObject(json)
+            var location = jObject.getJSONArray("results")
+            val list = ArrayList<String>()
+            (0 until location.length()).mapTo(list) {
+                (location.getJSONObject(it).optString("city") + " " +
+                        location.getJSONObject(it).optString("state") + ", " +
+                        location.getJSONObject(it).optString("country"))
+            }
+            return list
+        }
+
         fun getJsonFromAssets(fileName: String, context: Context): String? {
             /*
         open file - stream of bytes
