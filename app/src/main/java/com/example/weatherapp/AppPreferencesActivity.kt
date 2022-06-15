@@ -1,5 +1,6 @@
 package com.example.weatherapp
 
+import android.R
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
@@ -7,10 +8,16 @@ import android.location.Address
 import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
+import com.example.weatherapp.api.RetroApiInterface
+import com.example.weatherapp.api.WeatherRepository
+import com.example.weatherapp.api.WeatherViewModel
 import com.example.weatherapp.databinding.ActivityAppPreferencesBinding
+import kotlinx.coroutines.Job
 
 class AppPreferencesActivity : AppCompatActivity() {
     val okColor = Color.parseColor("#E0E0E0")
@@ -22,6 +29,8 @@ class AppPreferencesActivity : AppCompatActivity() {
     lateinit var geocoder: Geocoder
     lateinit var  locationList: ArrayList<Address>
     lateinit var currLocationText : String
+    lateinit var repo : WeatherRepository
+    lateinit var vm : WeatherViewModel
     var use24h = false
     var useMetricUnits = false
     var changedSettings = false
@@ -37,6 +46,8 @@ class AppPreferencesActivity : AppCompatActivity() {
         preferences = getSharedPreferences("prefs", MODE_PRIVATE)
         geocoder = Geocoder(this)
         locationList = ArrayList()
+        repo = WeatherRepository(RetroApiInterface.create(), this)
+        vm = WeatherViewModel(repo)
 
         //load settings and apply to controls in the xml
         currLocationText = preferences.getString("niceLocation", NO_LOC_TEXT)!!
@@ -50,6 +61,22 @@ class AppPreferencesActivity : AppCompatActivity() {
 
         println(preferences.getString("niceLocation", "no location"))
 
+        //Autocomplete text from location
+        var autoCompleteAdapter = ArrayAdapter(this, R.layout.simple_list_item_1,listOf(""))
+        binding.zipEditText.setAdapter(autoCompleteAdapter)
+
+        var job : Job? = null
+        binding.zipEditText.addTextChangedListener {
+            if (job != null)
+                job!!.cancel()
+            job = vm.getLocation(binding.zipEditText.text.toString())
+        }
+
+        vm.autoCompleteList?.observe(this) {
+            autoCompleteAdapter = ArrayAdapter(this, R.layout.simple_list_item_1,it)
+            binding.zipEditText.setAdapter(autoCompleteAdapter)
+            binding.zipEditText.showDropDown()
+        }
 
         binding.applyButton.setOnClickListener {
             val searchTerm = binding.zipEditText.text.toString()

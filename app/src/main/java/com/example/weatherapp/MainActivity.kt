@@ -17,12 +17,19 @@ import android.content.SharedPreferences
 import android.location.Address
 import android.location.Geocoder
 import android.text.method.TextKeyListener.clear
+import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
+import com.example.weatherapp.api.AutocompleteAPI
+import com.example.weatherapp.database.JsonDbHelper
 import com.example.weatherapp.database.Util
 import com.google.firebase.crashlytics.ktx.crashlytics
 import com.google.firebase.ktx.Firebase
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -35,14 +42,19 @@ class MainActivity : AppCompatActivity() {
     lateinit var repo : WeatherRepository
     lateinit var vm : WeatherViewModel
     lateinit var pref : SharedPreferences
+    var cityList = ArrayList<String>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         pref = getSharedPreferences("prefs", Context.MODE_PRIVATE)
         //Comment this out if you want to skip the welcome page when there's already a stored pref
-        //pref.edit().clear().commit()
-
+        pref.edit().clear().commit()
+        var apit = AutocompleteAPI.create()
+        GlobalScope.launch {
+            var t1 = apit.getLocation("lon")
+            println(t1.body())
+        }
         if(pref.getString("niceLocation","") != "") {
             val frontPageIntent = Intent(this, FrontPageActivity::class.java)
             startActivity(frontPageIntent)
@@ -57,6 +69,23 @@ class MainActivity : AppCompatActivity() {
         binding.spinner.adapter = adapter
         repo = WeatherRepository(RetroApiInterface.create(), this)
         vm = WeatherViewModel(repo)
+
+        //Autocomplete text from location
+        var autoCompleteAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,cityList)
+        binding.welcomeLocationTextEdit.setAdapter(autoCompleteAdapter)
+
+        var job : Job? = null
+        binding.welcomeLocationTextEdit.addTextChangedListener {
+            if (job != null)
+                job!!.cancel()
+            job = vm.getLocation(binding.welcomeLocationTextEdit.text.toString())
+        }
+
+        vm.autoCompleteList?.observe(this) {
+            autoCompleteAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1,it)
+            binding.welcomeLocationTextEdit.setAdapter(autoCompleteAdapter)
+            binding.welcomeLocationTextEdit.showDropDown()
+        }
 
         binding.welcomeContinueButton.setOnClickListener {
             //binding.welcomeContinueButton.isVisible = false

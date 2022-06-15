@@ -15,6 +15,7 @@ import java.util.*
 class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
     var currentWeather = MutableLiveData<CurrentWeather>()
     var alertList: LiveData<List<Alert>>? = MutableLiveData()
+    var autoCompleteList = MutableLiveData<List<String>>()
     private var dailyWeather: LiveData<List<DailyWeather>>? = MutableLiveData()
     private var hourlyWeather: LiveData<List<HourlyWeather>>? = MutableLiveData()
     private var currentWeatherSingle: LiveData<CurrentWeather>? = MutableLiveData()
@@ -22,6 +23,16 @@ class WeatherViewModel(val repo : WeatherRepository) : ViewModel() {
         getAlerts()
     }
     var job : Job? = null
+
+    fun getLocation(location : String) : Job {
+        return GlobalScope.launch {
+            var response = repo.getLocation(location)
+            if (response.isSuccessful) {
+                var cityList = JsonDbHelper.toCityList(response.body()!!)
+                autoCompleteList.postValue(cityList)
+            }
+        }
+    }
     fun getWeather(latitude : String, longitude : String) {
         CoroutineScope(Dispatchers.IO).launch {
             var res = repo.getWeather(latitude,longitude)
